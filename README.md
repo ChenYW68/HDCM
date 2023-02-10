@@ -57,7 +57,7 @@ Moreover, the [HDCM](https://github.com/ChenYW68/HDCM/tree/main/HDCMc/LoadPackag
  install.packages("./LoadPackages/HDCM_1.0.zip", repos = NULL, type = "win.binary")
 ```
 
-## An example of the proposed HDCM for large spatio-temporal data
+## An example of the proposed ``HDCM`` for large spatio-temporal data
 ```
 # install.packages("./LoadPackages//HDCM_0.1.0.zip", repos = NULL, type = "win.binary")
 rm(list=ls())
