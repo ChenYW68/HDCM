@@ -28,6 +28,7 @@ Quality (CMAQ, Byun and Schere, (2006)) system for China's Beijing-Tianjin-Hebei
   <strong>Figure 1:</strong> Maps of grid cells of the CMAQ and the NAQPMS. The symbols ``+'' represent the centroids of 16{,} 093 9km CMAQ grids. The symbols ``*'' denote the centroids of $6{,} 382$ 15km NAQPMS grids.
   </figcaption>
 </figure>
+
 ###
 
 In this paper, we propose a Bayesian hierarchical dynamic model (``HDCM``) and develop an algorithm based on variational Bayes (VB) and ensemble Kalman smoother (EnKS) to accelerate the parameter estimation and calibration procedure. To further improve the scalability of the HDCM, a Laplace approximation and a space-partitioning-based procedure are embedded in VB and EnKS, respectively. The VB and space-partitioning-based EnKS (spEnKS) have been implemented via our an R package - [HDCM](https://github.com/ChenYW68/HDCM/tree/main/HDCMc/LoadPackages).
