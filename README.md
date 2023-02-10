@@ -125,12 +125,9 @@ H.basic.data$plot.grid
 PM25_2015w[, c("sim_CMAQ_PM25")] <- sqrt(PM25_2015w[, c("sim_CMAQ_PM25")])
 
 #-- Sellect the time rang of data
-PM25_2015w <- PM25_2015w %>%
-  dplyr::filter(
-    between((as.Date(DATE_TIME)),
-            (as.Date(paste0(2015, "-", "11-01"))),
-            (as.Date(paste0(2015, "-", "11-30"))))
-  )
+PM25_2015w <- PM25_2015w %>% dplyr::filter(between(as.Date(DATE_TIME), 
+                                                   as.Date(paste0(2015, "-", "11-01")),
+                                                   as.Date(paste0(2015, "-", "11-30"))))
   
 #-- Combine other variables with time variable
 DATE_TIME <- unique(PM25_2015w$DATE_TIME) %>% sort()
