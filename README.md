@@ -14,13 +14,13 @@ Quality (CMAQ, Byun and Schere, (2006)) system for China's Beijing-Tianjin-Hebei
   <img src="./HDCMc/figure/Fig1.jpg" width=50% height=50%>
     </p>
   <figcaption
-  <strong>Figure 1:</strong> (a) Map of China. (b) Zoomed-in map of the BTH region along with locations of $68$ monitoring stations (red dots) and centroids of $5{,}587$ 9-km CMAQ grids (gray dots).} (c)-(e) Scatter plots of CMAQ $PM_{2.5}$ forecasts versus actual observations at Zhangjiakou, Beijing, and Hengshui in different seasons, where ``Corr'' represents the Pearson correlation coefficient between CMAQ $PM_{2.5}$ outputs and observed $PM_{2.5}$ concentrations. Three reference lines with the slope k = 0.5, 1, and  2 are colored in gray.
+  <strong>Figure 0:</strong> (a) Map of China. (b) Zoomed-in map of the BTH region along with locations of $68$ monitoring stations (red dots) and centroids of $5{,}587$ 9-km CMAQ grids (gray dots).} (c)-(e) Scatter plots of CMAQ $PM_{2.5}$ forecasts versus actual observations at Zhangjiakou, Beijing, and Hengshui in different seasons, where ``Corr'' represents the Pearson correlation coefficient between CMAQ $PM_{2.5}$ outputs and observed $PM_{2.5}$ concentrations. Three reference lines with the slope k = 0.5, 1, and  2 are colored in gray.
   </figcaption>
 </figure> -->
 
 
 ## An illustration for the reanalysis dataset
-<figure id="Figure2">
+<figure id="Figure1">
     <p align="center">
   <img src="./HDCMc/figure/FigS2.jpg" width=50% height=50%>
   </p>
@@ -106,12 +106,12 @@ H.basic.data <- CreateGrid(PM25_2015w,
                            scale = 5)
 H.basic.data$plot.grid
 ```
-<figure id="Figure3">
+<figure id="Figure2">
     <p align="center">
   <img src="./HDCMc/figure/FigS3_b.jpg" width=50% height=50%>
   </p>
   <figcaption
-  <strong>Figure 1:</strong> Triangulated mesh for the reanalysis dataset with 9 subregions, whose centroids are marked with red dots.
+  <strong>Figure 2:</strong> Triangulated mesh for the reanalysis dataset with 9 subregions, whose centroids are marked with red dots.
   </figcaption>
 </figure>
 
@@ -213,3 +213,13 @@ CV_T_Dist_W <- HDCM(Tab = tab,
 end.time <- Sys.time()
 print(end.time - start.time)
 ```
+##  Comparing VB-spEnKS with MCMC-KS
+<figure id="Figure4">
+    <p align="center">
+  <img src="./HDCMc/figure/FigS7.jpg" width=50% height=50%>
+  </p>
+  <figcaption
+  <strong>Figure 3:</strong> Maps of the random process $w_t(s)$ in the Gneiting space-time covariance model. From top to bottom: simulated $w_t(s)$ map, map of $100$ sampling locations, predicted $w_t(s)$ map using MCMC-KS based on the $100$ locations, and predicted $w_t(s)$ map using VB-spEnKS based on the $100$ locations. The time horizon is from time $= 15$ to time $= 20$.
+  </figcaption>
+</figure>
+
