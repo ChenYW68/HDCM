@@ -77,22 +77,22 @@ rm(NAQPMS_CMAQ_Dataset_2015W)
 #    package (Lindgren and Rue, 2015), a spatial partitioning procedure is 
 #    embedded in our triangulation scheme.
 #--------------------------------------------------------------------------------------
-Ch <- 0.05; R <- 3; Cs <- 5e-2; Ct <- 1; Ne <- 100
+Ch <- 0.05; R <- 3; Cs <- 8e-2; Ct <- 1; Ne <- 100
 H.basic.data <- CreateGrid(PM25_2015w,
                            Site,
                            Map = fortify(larg_bth_map),
                            ## 2042
-                           max.edge = c(.35, .7),
-                           offset = c(1e-1, 0.6),
-                           cutoff = .23, # 0.5
+                           # max.edge = c(.35, .7),
+                           # offset = c(1e-1, 0.6),
+                           # cutoff = .23, # 0.5
                            ##3158
                            # max.edge = c(.23, .4), 
                            # offset = c(1e-1, 0.9), 
                            # cutoff = 0.3,
                            ## 10103
-                           # max.edge = c(.21, .3),
-                           # offset = c(1e-1, 0.9), 
-                           # cutoff = 0.11,
+                           max.edge = c(.21, .3),
+                           offset = c(1e-1, 0.9), 
+                           cutoff = 0.11,
                            distance.scale = 1e3,
                            R = R,
                            col = "blue",
