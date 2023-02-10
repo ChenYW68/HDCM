@@ -35,15 +35,9 @@ In this paper, we propose a Bayesian hierarchical dynamic model (``HDCM``) and d
 
 ## Codes
 There are two parts for our codes: 
-1. The VB-spENKS algorithm was written into the [HDCM](https://github.com/ChenYW68/HDCM/tree/main/HDCMc/LoadPackages) package in the R statistical environment;
+1. The VB-spEnKS algorithm was written into the [HDCM](https://github.com/ChenYW68/HDCM/tree/main/HDCMc/LoadPackages) package in the R statistical environment;
 2. A project entitled ``[HDCMc.Rproj](https://github.com/ChenYW68/HDCM/tree/main/HDCMc)'' in the [RStudio](https://www.rstudio.com/products/rstudio/download/) environment was built to reproduce all the results (e.g., figures and tables) in this work. 
 
-```
-# Require core package
-1. R >= 4.2.1
-2. Rcpp >= 1.0.7
-3. mgcv >= 1.8-41
-```
 ## Installing and loading dependent packages
 -	Open the project file, ``[HDCMc.Rproj](https://github.com/ChenYW68/HDCM/tree/main/HDCMc/LoadPackages)'', based on the [RStudio](https://www.rstudio.com/products/rstudio/download/) tool.
 
