@@ -1,34 +1,34 @@
 rm(list=ls())
 source("./LoadPackages/RDependPackages.R")
-data("SiteData", package = "ADCM")
+data("SiteData", package = "HDCM")
 {
 
-  MODE_BASE_TABLE <- obs_PM25_2015w %>% setorderv(c("CITY", "ID","DATE_TIME"))
-  setDF(MODE_BASE_TABLE)
+  PM25_2015w <- obs_PM25_2015w %>% setorderv(c("CITY", "ID","DATE_TIME"))
+  setDF(PM25_2015w)
   ##################################################################
   ###################################################################
   #                           1. Data loading
   ###################################################################
 
-  City.Name <- as.character(unique(MODE_BASE_TABLE$CITY))
-  setDF(MODE_BASE_TABLE)
-  DATE_TIME <- unique(MODE_BASE_TABLE$DATE_TIME) %>% sort()
+  City.Name <- as.character(unique(PM25_2015w$CITY))
+  setDF(PM25_2015w)
+  DATE_TIME <- unique(PM25_2015w$DATE_TIME) %>% sort()
   Nt <- length(DATE_TIME)
   date.time <- data.frame(time.index = 1:Nt,
                           time.scale = seq(0, 1, , Nt),
                           DATE_TIME = DATE_TIME)
-  MODE_BASE_TABLE <- MODE_BASE_TABLE  %>% left_join(date.time,  by = c("DATE_TIME"))
-  MODE_BASE_TABLE[, c("REAL_PM25")] <- sqrt(MODE_BASE_TABLE[,  c("REAL_PM25")])
-  MODE_BASE_TABLE[, c("sim50_CMAQ_PM25")] <- sqrt(MODE_BASE_TABLE[,  c("sim50_CMAQ_PM25")])
+  PM25_2015w <- PM25_2015w  %>% left_join(date.time,  by = c("DATE_TIME"))
+  PM25_2015w[, c("REAL_PM25")] <- sqrt(PM25_2015w[,  c("REAL_PM25")])
+  PM25_2015w[, c("sim50_CMAQ_PM25")] <- sqrt(PM25_2015w[,  c("sim50_CMAQ_PM25")])
 
   Covariate = c("sim50_CMAQ_PM25");
 
-  setDF(MODE_BASE_TABLE)
-  Cov.Index <- which(base::colnames(MODE_BASE_TABLE) %in% Covariate)
+  setDF(PM25_2015w)
+  Cov.Index <- which(base::colnames(PM25_2015w) %in% Covariate)
   if(length(Cov.Index) > 1){
-    mean_covariates <- apply(MODE_BASE_TABLE[, Cov.Index], 2, mean)
-    sd_covariates <- apply(MODE_BASE_TABLE[, Cov.Index], 2, sd)
-    MODE_BASE_TABLE[, Cov.Index] <- scale(MODE_BASE_TABLE[, Cov.Index],
+    mean_covariates <- apply(PM25_2015w[, Cov.Index], 2, mean)
+    sd_covariates <- apply(PM25_2015w[, Cov.Index], 2, sd)
+    PM25_2015w[, Cov.Index] <- scale(PM25_2015w[, Cov.Index],
                                           center = mean_covariates,
                                           scale = sd_covariates)
   }
@@ -37,7 +37,7 @@ data("SiteData", package = "ADCM")
 # ###################################################################
 # #                           2. Model
 # ###################################################################
-region <- unique(MODE_BASE_TABLE$CITY)
+region <- unique(PM25_2015w$CITY)
 ###################################################################
 #                       SVC model
 ###################################################################
@@ -67,9 +67,9 @@ region <- unique(MODE_BASE_TABLE$CITY)
   }
 
 
-  region <- sort(as.character(unique(MODE_BASE_TABLE$CITY)))
+  region <- sort(as.character(unique(PM25_2015w$CITY)))
   region_num <- 1:length(region)
-  setDT(MODE_BASE_TABLE)
+  setDT(PM25_2015w)
 
   Ens <- ceil(0.5*n.samples)
 
@@ -79,12 +79,12 @@ region <- unique(MODE_BASE_TABLE$CITY)
   for(r in region_num)
   {
 
-    year_range <- unique(MODE_BASE_TABLE$YEAR)
-    tem <- MODE_BASE_TABLE[CITY %in% region[r], "ID"]
+    year_range <- unique(PM25_2015w$YEAR)
+    tem <- PM25_2015w[CITY %in% region[r], "ID"]
 
     for(Year in year_range)
     {
-      Base_Table <- MODE_BASE_TABLE[YEAR == Year,]
+      Base_Table <- PM25_2015w[YEAR == Year,]
       month_range <- unique(Base_Table$MONTH)
       for(Month in month_range)
       {
@@ -132,7 +132,7 @@ region <- unique(MODE_BASE_TABLE$CITY)
 
           Da.pre$REAL_PM25 <- Da.pre$REAL_PM25^2
           spT <- spT_validation(Da.pre$REAL_PM25, temp.Pred,
-                                sigma = NA, zhat.Ens = NULL,
+                                zhat.Ens = NULL,
                                 names = F, CC = F)[c(1, 4)]
           print(spT)
 
@@ -166,6 +166,6 @@ region <- unique(MODE_BASE_TABLE$CITY)
     print(temp0)
   }
 }
-# writexl::write_xlsx(temp0, path = "./data/SVCx_cv.xlsx")
-writexl::write_xlsx(temp0, path = "./Result/SVCx_w_cv.xlsx")
+
+# writexl::write_xlsx(temp0, path = "./Result/SVCx_w_cv.xlsx")
 writexl::write_xlsx(SVC, path = "./Result/pred_SVCx_w_cv.xlsx")

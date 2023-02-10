@@ -1,20 +1,11 @@
 rm(list=ls())
-source("./R/PSTVB_Packages.R")
-source("./R/CreateGrid.R")
-# source("./R/CreateHmatrix.R")
-source("./R/Construct_TestTrain_Data.R")
-source("./R/HDCM.R")
-source("./R/VB_EnKS.R")
-source("./R/VB.R")
-source("./R/MEnKS.R")
-source("./R/util.R")
-# load("./data/CMAQ.RData")
-# load("./data/GeoMap.RData")
+source("./LoadPackages/RDependPackages.R")
 load("./data/NAQPMS_CMAQ_Dataset_2015W.RData")
+load("./data/Large_BTH_map.RData")
 Site <- Site[distToNearestCAMQpoint <= 15]
 set.seed(12345)
-
-
+# range(rdist(Site[, 4:5]))/1E3
+# 
 n.train <- 5000
 train.id <- sample(Site$ID, n.train, replace = F)
 cat("The number of training set:", length(train.id))
@@ -30,32 +21,27 @@ rm(NAQPMS_CMAQ_Dataset_2015W)
 colnames(PM25_2015w)
 # setnames(PM25_2015w, "PM25", "REAL_PM25")
 
-setDF(Site);
-INDX <- which(colnames(Site) %in% c("LON_X", "LAT_Y"))
-Site <- ADCM::spCoords.transform(Site[, -INDX], method = 1)
-setDF(PM25_2015w)
-INDX <- which(colnames(PM25_2015w) %in% c("LON_X", "LAT_Y"))
-PM25_2015w <- ADCM::spCoords.transform(PM25_2015w[, -INDX], method = 1)
 ######################################################################
 #                   1. Create grid
 ######################################################################
 
-load("./data/larg_bth_map.RData")
-source("./R/CreateGrid.R")
 Ch <- 0.05
 n.grps <- 3
 H.basic.data <- CreateGrid(PM25_2015w,
                            Site,
                            Map = fortify(larg_bth_map),
-                           # max.edge = c(.21, .3), #0.3,0.7
-                           # offset = c(1e-1, 0.9), #0.4, 0.6
-                           # cutoff = 0.11,#.23, #0.1
-                           max.edge = c(.35, .7), #0.3,0.7
-                           offset = c(1e-1, 0.6), #0.4, 0.6
-                           cutoff = .23,
-                           # max.edge = c(.23, .4), #0.3,0.7
-                           # offset = c(1e-1, 0.9), #0.4, 0.6
+                           ## 2042
+                           max.edge = c(.35, .7),
+                           offset = c(1e-1, 0.6),
+                           cutoff = .23, # 0.5
+                           ##3158
+                           # max.edge = c(.23, .4), 
+                           # offset = c(1e-1, 0.9), 
                            # cutoff = 0.3,
+                           ## 10103
+                           # max.edge = c(.21, .3),
+                           # offset = c(1e-1, 0.9), 
+                           # cutoff = 0.11,
                            distance.scale = 1e3,
                            n.grps = n.grps,
                            col = "blue",
@@ -63,11 +49,11 @@ H.basic.data <- CreateGrid(PM25_2015w,
                            site.id = "ID",
                            factor = 1,
                            ch = Ch,
-                           method = "indicator1",
+                           method = "Wendland",
                            response.label = "PM25",
                            distance.method = 1,
-                           way = 2,
-                           scale = 5) #indicator
+                           Grid = TRUE,
+                           scale = 5)
 H.basic.data$plot.grid
 sum(H.basic.data$Grid.infor$summary$Knots.count)
 
@@ -88,8 +74,8 @@ for(g in 1:H.basic.data$Grid.infor$summary$res)
 }
 print(spTaper$tuning)
 
-# ggsave(plot = H.basic.data$plot.grid, height = 6, width = 8,
-#        file = './figure/Fig_Large_Map.pdf')
+
+
 H.basic.data$Grid.infor$summary$Knots.count
 range(H.basic.data$Grid.infor$summary$Hdist)*0.05
 # H.basic.data$Hs <- H.basic.data$Hs/rowSums(H.basic.data$Hs)
@@ -107,15 +93,11 @@ PM25_2015w <- PM25_2015w %>%
     # between(MONTH, 10, 12),
   )
 colnames(PM25_2015w)
-# #
-# PM25_2015w[, c("sim_CMAQ_PM25", "sim_SPRESS")]=
-#   sqrt(PM25_2015w[, c("sim_CMAQ_PM25", "sim_SPRESS")])
+
 
 PM25_2015w[, c("sim_CMAQ_PM25")] <-
   sqrt(PM25_2015w[, c("sim_CMAQ_PM25")])
 
-# PM25_2015w[, c("REAL_PM25")]=
-#   sqrt(PM25_2015w[, c("REAL_PM25")])
 
 
 DATE_TIME <- unique(PM25_2015w$DATE_TIME) %>% sort()
@@ -127,33 +109,23 @@ date.time <- data.frame(time.index = 1:Nt,
                         DATE_TIME = DATE_TIME)
 PM25_2015w <- PM25_2015w  %>% left_join(date.time, by = c("DATE_TIME"))
 
-# PM25_2015w$Bias <- sqrt(PM25_2015w$REAL_PM25) - sqrt(obs_PM25_2015w$sim50_CMAQ_PM25)
-# PM25_2015w$CMAQ_PM25  <- sqrt(PM25_2015w$sim50_CMAQ_PM25)
-# construct datasets
-# ADCM.Data <- ParYtsXts(Model_Base_Table_Update,
-#                      include = list(YearMonth = YearMonth),
-#                      X = c("CMAQ_PM25_30", "REAL_LON_WIND", "REAL_TEMP",
-#                            "REAL_PRES", "REAL_DEWP", "REAL_LAT_WIND"))
-source("./R/Construct_HDCM_Data.R")
-ADCM.Data <- Construct_HDCM_Data(data = PM25_2015w,
+
+HDCM.Data <- Construct_HDCM_Data(data = PM25_2015w,
                                  include = list(
                                    YEAR = c(2015, 2016),
                                    month_day = c("11-01", "1-31")
                                  ),
-                                 Y = "PM25",#"Bias",#"REAL_PM25",
+                                 Y = "PM25",
                                  X = c("sim_CMAQ_PM25"
                                        , "TEMP"
                                        , "WIND_X"
                                        , "WIND_Y"
-                                       # , "time.index"
-                                       # , "time.scale.sin"
-                                       # , "time.scale.cos"
                                  ),
                                  standard = T,
                                  center = T,
                                  start.index = 1)
-Vari <- var(sqrt(as.vector(ADCM.Data$Y_ts)))
-# assign("scaled_variable", ADCM.Data$scaled_variable, envir = .GlobalEnv)
+Vari <- var(sqrt(as.vector(HDCM.Data$Y_ts)))
+# assign("scaled_variable", HDCM.Data$scaled_variable, envir = .GlobalEnv)
 ##########################################################################################
 #-----------------------------------------------------------------------------------------
 #                         4. Model setting
@@ -164,8 +136,7 @@ Vari <- var(sqrt(as.vector(ADCM.Data$Y_ts)))
 
   theta.2 <- c(1e-1, 1E-3, 1E0)
   res.num <- H.basic.data$Grid.infor$summary$res
-  # ADCM.Data$X_ts <- ADCM.Data$X_ts[-1,,]
-  p1 = dim(ADCM.Data$X_ts)[1]
+  p1 = dim(HDCM.Data$X_ts)[1]
   #---------------------------------------------------------------------
   #                           4.1 Prior
   #---------------------------------------------------------------------
@@ -197,88 +168,32 @@ Vari <- var(sqrt(as.vector(ADCM.Data$Y_ts)))
 #                          5. Model fitting and prediction
 ##########################################################################################
 # ds <- min(H.basic.data$BAUs.Dist[row(H.basic.data$BAUs.Dist)!= col(H.basic.data$BAUs.Dist)])
-library(profvis)
-library(CovUtil)
-source("./R/HDCM.R")
-source("./R/VB_EnKS.R")
-source("./R/util.R")
-source("./R/VB.R")
-source("./R/MEnKS.R")
+# library(profvis)
+# library(CovUtil)
 
 g <- 1
 Cs <- 8e-2
 Cs <- 5e-2
-# Cs <- 1e-3
-# quantile(as.vector(H.basic.data$Grid.infor$level[[g]]$BAUs.Dist), Cs)*
-#   H.basic.data$Grid.infor$level[[g]]$Max.Dist
-#
-# G <- as.matrix(H.basic.data$Grid.infor$level[[g]]$Adj.Mat)
-# G <- ifelse(abs(G) > 0, 1, 0)
-# mg <- nrow(G)
-# dx <- as.vector(H.basic.data$Grid.infor$level[[g]]$BAUs.Dist)*
-#   H.basic.data$Grid.infor$level[[g]]$Max.Dist/1800
-# mean(dx[dx > 0])*8*sqrt(100/40)*
-#   H.basic.data$Grid.infor$level[[g]]$Max.Dist
-#
-#
-# min(dx[dx > 0])* H.basic.data$Grid.infor$level[[g]]$Max.Dist
-# quantile(dx[dx > 0], c(0.01, 0.75))*8*sqrt(100/40)
-#
-# min(dx[dx > 0])*8*sqrt(100/40)
-#
-# max(dx[dx > 0])
-#
-# D <- fields::Wendland(H.basic.data$Grid.infor$level[[g]]$BAUs.Dist *
-#                         H.basic.data$Grid.infor$level[[g]]$Max.Dist
-#                       , theta =(H.basic.data$Grid.infor$level[[g]]$Max.Dist)*Cs
-#                       , dimension = 1, k = 1)
-#
-# D <- ifelse(D > 0, 1, 0)
-# apply(D, 2, sum)
-#
-# quantile(dx[dx > 0], c(0.01, 0.75))
-#
-#
-# range(dx[dx > 0]*8*sqrt(100/40))
-#
-# median(dx[dx > 0])*8*sqrt(100/40)*
-#   H.basic.data$Grid.infor$level[[g]]$Max.Dist*Cs
-# # max(H.basic.data$Grid.infor$level[[g]]$BAUs.Dist) *
-#   H.basic.data$Grid.infor$level[[g]]$Max.Dist*Cs
-
-
-# m <- 10
-# D <- H.basic.data$Grid.infor$level[[g]]$BAUs.Dist
-# spTaper <- list()
-# # theta <- vector()
-# for(i in 1:mg){
-#   D <- H.basic.data$Grid.infor$level[[g]]$BAUs.Dist
-#   spTaper$taper[[g]] <- D
-#
-#   spTaper$tuning[[g]]$theta[i] <- (H.basic.data$Grid.infor$level[[g]]$Max.Dist)*
-#     Rfast::nth(D[i, ], m, descending = F)
-#
-#   spTaper$taper[[g]][i, ] <- fields::Wendland(D[i, ] * H.basic.data$Grid.infor$level[[g]]$Max.Dist
-#                                               , theta = spTaper$tuning[[g]]$theta[i]
-#                                               , dimension = 1, k = 1)
-#
-# }
 
 Ct <- 1
 Ne <- 100
 tab.1 <- strsplit(as.character(Ch), ".", fixed = TRUE)[[1]][2]
 tab.2 <- strsplit(as.character(Cs), ".", fixed = TRUE)[[1]][2]
 m <- sum(H.basic.data$Grid.infor$summary$Knots.count)
+
+
+
+
 tab <- paste0("L", n.grps^2, "_", tab.1, "_", tab.2, "_", n.train, "_", m)
 start.time <- Sys.time()
 CV_T_Dist_W <- HDCM(Tab = tab,
                     Site = Site,
-                    HDCM.Data = ADCM.Data,
+                    HDCM.Data = HDCM.Data,
                     H.basic.data = H.basic.data,
                     prior = prior,
                     ini.para = para,
-                    CV = T,
-                    verbose.VB = T,
+                    CV = TRUE,
+                    verbose.VB = TRUE,
                     verbose = TRUE,
                     Object = "Flag",
                     transf.Response = c("SQRT"),
@@ -287,21 +202,15 @@ CV_T_Dist_W <- HDCM(Tab = tab,
                                      pwd = "mypwd",
                                      believeNRows = FALSE,
                                      case = "toupper")),
-                    response.scale = F,
-                    save.Predict = F,
+                    save.Predict = TRUE,
                     ensemble.size = Ne,
-                    sample.size = 100,
-                    # n.cores = 5,
                     factor = 1,
                     cs = Cs,
                     ct = Ct,
                     tol.real = 1e-4,
                     itMin = 5e1,
                     itMax = 5e1,
-                    Obj.Seq = c(1:1))
+                    Obj.Seq = 1)
 end.time <- Sys.time()
 print(end.time - start.time)
-# test.id <- which(Site$ID %in% Site[Site$Flag == "test", 1])
-# pred.Y_ts <- CV_T_Dist_W[[1]][["Pred"]]
-# test.Y_ts <- ADCM.Data$Y_ts[, test.id]
 

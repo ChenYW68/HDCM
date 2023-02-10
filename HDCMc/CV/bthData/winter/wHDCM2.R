@@ -41,7 +41,7 @@ obs_PM25_2015w <- ADCM::spCoords.transform(obs_PM25_2015w[, -INDX],
 #                             , stringsAsFactors = FALSE
 #                             , encoding = "UTF-8"
 #                             , use_iconv = T)
-# 
+#
 # bth_map <- china.county.map[china.county.map$NAME_1 %in%
 #                                        c("Beijing", "Tianjin", "Hebei"
 #                                        ),]
@@ -59,8 +59,8 @@ obs_PM25_2015w <- ADCM::spCoords.transform(obs_PM25_2015w[, -INDX],
 load("./data/bth_map.RData")
 source("./R/CreateGrid.R")
 Ch <- 0.23
-n.grps <- 1
-H.basic.data <- CreateGrid(obs_PM25_2015w, 
+n.grps <- 2
+H.basic.data <- CreateGrid(obs_PM25_2015w,
                            Site,
                            Map = bth_map,
                            max.edge = c(.35, .65), #0.3,0.7
@@ -71,15 +71,14 @@ H.basic.data <- CreateGrid(obs_PM25_2015w,
                            # cutoff = .05,
                            distance.scale = 1e3,
                            n.grps = n.grps,
-                           col = "black", 
+                           col = "black",
                            size = 2,
                            site.id = "ID",
                            factor = 1,
-                           cs = Ch,
+                           ch = Ch,
                            method = "indicator1",
                            distance.method = 1,
-                           hjust = c(-1, 1, -1, 0.5),
-                           way = 1) #indicator
+                           hjust = c(-1, 1, -1, 0.5)) #indicator
 H.basic.data$plot.grid
 # ggsave(plot = H.basic.data$plot.grid, height = 6, width = 6,
 #        file = './figure/Fig_Small_Map.pdf')
@@ -95,14 +94,14 @@ rARPACK::eigs_sym(as.dgCMatrix.spam(H.basic.data$Grid.infor$level[[1]][["Adj.Mat
 #                       2. Mapping matrix: H
 ##########################################################################################
 # H.basic.data <- CreateHmatrix(grid, method = c("indicator"), #indicator, INLA, Wendland
-#                           site = Site, factor = 1, 
+#                           site = Site, factor = 1,
 #                           cs = .15,  distance = F,
 #                           distance.method = "geodetic:km" #geodetic:1000km
 # )
 
 # plot.Mat <- function(mat)
 # {
-#   mat %>% as.vector() %>% 
+#   mat %>% as.vector() %>%
 #     tibble(value = ., row = rep(1:nrow(mat), times = ncol(mat)),
 #            col = rep(1: ncol(mat), each = nrow(mat))) %>%
 #     ggplot(aes(x = row, y = col, fill = value)) +
@@ -113,18 +112,18 @@ rARPACK::eigs_sym(as.dgCMatrix.spam(H.basic.data$Grid.infor$level[[1]][["Adj.Mat
 # }
 
 ##########################################################################################
-#                          3. Data for modeling 
+#                          3. Data for modeling
 ##########################################################################################
 # YearMonth <- c(201506, 201507, 201508)
 PM25_2015w <- obs_PM25_2015w #%>% filter(YEAR_MONTH %in% YearMonth)
-# 
+#
 # CMAQ.cv <- Validation.Group.Region(data = PM25_2015w,
 #                                 # sigma = Pred.sd,
-#                                 col = c("REAL_PM25", 
+#                                 col = c("REAL_PM25",
 #                                         "sim_CMAQ_PM25"),
 #                                 by = "CITY")
 # writexl::write_xlsx(CMAQ.cv, path = "./Result/CMAQ.cv.xlsx")
-# # 
+# #
 # PM25_2015w[, c("sim_CMAQ_PM25", "sim_SPRESS")]=
 #   sqrt(PM25_2015w[, c("sim_CMAQ_PM25", "sim_SPRESS")])
 
@@ -141,12 +140,12 @@ date.time <- data.frame(time.index = 1:Nt,
                         DATE_TIME = DATE_TIME)
 PM25_2015w <- PM25_2015w  %>% left_join(date.time, by = c("DATE_TIME"))
 
-# PM25_2015w$Bias <- sqrt(PM25_2015w$REAL_PM25) - sqrt(obs_PM25_2015w$sim50_CMAQ_PM25) 
-# PM25_2015w$CMAQ_PM25  <- sqrt(PM25_2015w$sim50_CMAQ_PM25) 
-# construct datasets  
+# PM25_2015w$Bias <- sqrt(PM25_2015w$REAL_PM25) - sqrt(obs_PM25_2015w$sim50_CMAQ_PM25)
+# PM25_2015w$CMAQ_PM25  <- sqrt(PM25_2015w$sim50_CMAQ_PM25)
+# construct datasets
 
-source("./R/Construct_ADCM_Data.R")
-ADCM.Data <- Construct_ADCM_Data(data = PM25_2015w,
+source("./R/Construct_HDCM_Data.R")
+ADCM.Data <- Construct_HDCM_Data(data = PM25_2015w,
                                  include = list(YEAR = c(2015, 2016),
                                                 month_day = c("11-01", "1-31")),
                                  Y = "REAL_PM25",#"Bias",#"REAL_PM25",
@@ -154,14 +153,14 @@ ADCM.Data <- Construct_ADCM_Data(data = PM25_2015w,
                                        , "sim_TEMP"
                                        , "sim_WIND_X"
                                        , "sim_WIND_Y"
-                                       # , "sim_SPRESS" 
+                                       # , "sim_SPRESS"
                                        # , "time.scale"
                                        # , "time.index"
                                        # , "time.scale.sin"
                                        # , "time.scale.cos"
-                                 ), 
-                                 standard = T, 
-                                 center = T, 
+                                 ),
+                                 standard = T,
+                                 center = T,
                                  start.index = 1)
 Vari <- var(sqrt(as.vector(ADCM.Data$Y_ts)))
 
@@ -186,7 +185,7 @@ Vari <- var(sqrt(as.vector(ADCM.Data$Y_ts)))
     , theta.1 = list(mu = rep(1e-4, res.num), sigma.sq =  rep(1e5, res.num))
     , theta.2 = list(a = rep(theta.2[2], res.num), b =  rep(theta.2[3], res.num))
     , zeta = list(a = rep(1e-3, res.num), b =  rep(2e1, res.num))
-    , zeta0 = list(a = rep(1e-3, res.num), b =  rep(2e1, res.num)) 
+    , zeta0 = list(a = rep(1e-3, res.num), b =  rep(2e1, res.num))
     , proc.tau.sq = list(a = rep(2, res.num), b = rep(1, res.num))
     , proc0.tau.sq = list(a = rep(2, res.num), b = rep(1, res.num))
   )
@@ -198,7 +197,7 @@ Vari <- var(sqrt(as.vector(ADCM.Data$Y_ts)))
                 , theta.1 = list(E_theta.1 = rep(1e-3, res.num))
                 , theta.2 = list(E_theta.2 = rep(theta.2[1], res.num))
                 , zeta = list(E_zeta = rep(1e0, res.num))
-                , zeta0 = list(E_zeta0 = rep(1e0, res.num)) 
+                , zeta0 = list(E_zeta0 = rep(1e0, res.num))
                 , proc.tau.sq = list(E_tau.sq = rep(5e0, res.num))
                 , proc0.tau.sq = list(E_tau.sq = rep(1, res.num))
   )
@@ -221,8 +220,8 @@ tab.2 <- strsplit(as.character(Cs), ".", fixed = TRUE)[[1]][2]
 # tab <- paste0(tab.1, "_", tab.2, "_", Ct)
 tab <- paste0(n.grps, "_", tab.1, "_", tab.2)
 assign("Ch", Ch, envir = .GlobalEnv)
-hdcm.table <- "WH2_"
-Obj.Seq <- 9:13
+hdcm.table <- "HDCM2w_"
+Obj.Seq <- 1:13
 CVw_BTH <- HDCM(Tab = paste0(hdcm.table, tab),
                 Site = Site,
                 HDCM.Data = ADCM.Data,

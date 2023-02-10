@@ -1,7 +1,7 @@
 rm(list=ls())
-source("./R/PSTVB_Packages.R")
-source("./R/util.R")
+source("./LoadPackages/RDependPackages.R")
 load("./data/NAQPMS_CMAQ_Dataset_2015W.RData")
+load("./data/Large_BTH_map.RData")
 Site <- Site[distToNearestCAMQpoint <= 15]
 set.seed(12345)
 
@@ -29,12 +29,6 @@ range(PM25_2015w$PM25)
 
 setDF(PM25_2015w);setDF(Site);
 
-INDX <- which(colnames(Site) %in% c("LON_X", "LAT_Y"))
-Site <- ADCM::spCoords.transform(Site[, -INDX], method = 1)
-setDF(PM25_2015w)
-INDX <- which(colnames(PM25_2015w) %in% c("LON_X", "LAT_Y"))
-PM25_2015w <- ADCM::spCoords.transform(PM25_2015w[, -INDX],
-                                       method = 1)
 
 
 DATE_TIME <- unique(PM25_2015w$DATE_TIME) %>% sort()
@@ -45,38 +39,27 @@ date.time <- data.frame(time.index = 1:Nt,
                         time.scale.cos = cos(seq(0, 1, , Nt)/(0.03*pi)),
                         DATE_TIME = DATE_TIME)
 PM25_2015w <- PM25_2015w  %>% left_join(date.time, by = c("DATE_TIME"))
-# china.county.map <- rgdal::readOGR(paste0("./DataProcess/Gadm36_CHN_shp/."),"gadm36_CHN_1"
-#                                    , stringsAsFactors=FALSE
-#                                    , encoding = "UTF-8"
-#                                    , use_iconv = T)
-# china.county.map <- china.county.map[china.county.map$NAME_1 %in%
-#                                        c("Beijing", "Tianjin", "Hebei"
-#                                          ,"Shandong", "Nei Mongol"
-#                                          ,"Shanxi", "Henan","Liaoning"
-#                                          , "Shaanxi", "Jilin", "Shanghai"
-#                                          , "Jiangsu", "Heilongjiang", "Anhui"
-#                                        ),]
+
 
 load("./data/Large_BTH_map.RData")
 Map_BTH <- fortify(larg_bth_map)
 setnames(Map_BTH, c("long", "lat"), c("LON", "LAT"))
 global.coords = as.matrix(Site[, c("LON", "LAT")])
 mesh <- inla.mesh.2d(
-                    #boundary = boundary
                     loc.domain = global.coords,
-                    loc = Site[, c("LON", "LAT")],#[Site$Flag == "train", c("LON", "LAT")],
-                    ## 10103
-                    max.edge = c(.21, .3), #0.3,0.7
-                    offset = c(1e-1, 0.9), #0.4, 0.6
-                    cutoff = 0.11,
+                    loc = Site[, c("LON", "LAT")],
                     ## 2042
-                    # max.edge = c(.35, .7), #0.3,0.7
-                    # offset = c(1e-1, 0.6), #0.4, 0.6
-                    # cutoff = .23 # 0.5
+                    max.edge = c(.35, .7),
+                    offset = c(1e-1, 0.6),
+                    cutoff = .23 # 0.5
                     ##3158
-                    # max.edge = c(.23, .4), #0.3,0.7
-                    # offset = c(1e-1, 0.9), #0.4, 0.6
+                    # max.edge = c(.23, .4), 
+                    # offset = c(1e-1, 0.9), 
                     # cutoff = 0.3
+                    ## 10103
+                    # max.edge = c(.21, .3),
+                    # offset = c(1e-1, 0.9), 
+                    # cutoff = 0.11
                   )
 mesh$n
 
@@ -101,11 +84,6 @@ p <- ggplot() + inlabru::gg(mesh) + geom_sf(col = "black") +
 p
 
 ## ################################
-## Make the SPDE object and the formula
-## ################################
-##--- Construct the SPDE object
-# spde = inla.spde2.matern(mesh=mesh)
-
 
 Nt <- length(unique(PM25_2015w$time.index))
 region <- sort(as.character(unique(PM25_2015w$Flag)))
@@ -125,12 +103,6 @@ PM25_2015w[, c("PM25", "sim_CMAQ_PM25")] <-
   sqrt(PM25_2015w[,  c("PM25", "sim_CMAQ_PM25")])
 
 
-# if(length(Covariate) > 1){
-#   for(k in 1:(length(Covariate)))
-#   {
-#     PM25_2015w[, Cov.Index[k]] = scale(center = T, as.vector(
-#       PM25_2015w[, Cov.Index[k]]))[, 1]
-#   }}
 
 setDF(PM25_2015w)
 Cov.Index <- which(base::colnames(PM25_2015w) %in% Covariate)
@@ -190,56 +162,10 @@ for(r in 1){
 
   #-- Create the "full" stack object (estimation + prediction)
   stack <- inla.stack(stack.est, stack.pred)
-  # stack = inla.stack(stack.est)
+  spde <- inla.spde2.matern(mesh, alpha = 1, constr = FALSE)
 
-  prior.range <- c(1e-10, 10)
-  # prior.range <- c(max(c(diff(range(Da.mod$LON)),
-  #                        diff(range(Da.mod$LAT)))) * 1/20, 10)
-  ## Medium sd, relative half-spread factor
-  prior.sigma <- c(sd(Da.mod$PM25, na.rm = TRUE) / 2, 1)
-
-
-  spde.alpha <- 1
-  ## lognormal prior
-  ## Centre the parameterisation at range=1, sigma=1
-  nu <- spde.alpha - 1
-  kappa.zero <- sqrt(8*nu) / 1
-  tau.zero <- (gamma(nu) / (gamma(spde.alpha) * 4*pi * kappa.zero^(2*nu)) )^0.5 / 1
-  ## sigma^2 = Gamma(0.5)/( Gamma(1.5) (4\pi)^(dim/2) * kappa^(2*0.5) * tau^2 )
-  ## tau = [ Gamma(0.5)/( Gamma(1.5) (4\pi)^(dim/2) * kappa^(2*0.5) ) ]^0.5 / sigma
-  ## kappa = sqrt(8*0.5) / range
-  ## tau = [ Gamma(0.5)/( Gamma(1.5) (4\pi)^(dim/2) * (sqrt(8*0.5)/range)^(2*0.5) ) ]^0.5 / sigma
-  B.tau   <- cbind(log(tau.zero), nu, -1)
-  B.kappa <- cbind(log(kappa.zero), -1, 0)
-
-  theta.prior.mean <- log(c(prior.range[1], prior.sigma[2]))
-  ## Half-width of prior prediction interval, on log-scale: 2*sd = log(rel)
-  theta.prior.prec <- 4 / log(c(prior.range[2], prior.sigma[2]))^2
-  spde <- inla.spde2.matern(mesh, alpha = spde.alpha,
-                            # B.tau = B.tau, B.kappa = B.kappa,
-                            # prior.range.nominal = theta.prior.mean,
-                            # theta.prior.mean = theta.prior.mean,
-                            # theta.prior.prec = theta.prior.prec,
-                            constr = FALSE)
-
-  hyper.range.initial <- log(prior.range[1])
-  hyper.sigma.initial <- log(prior.sigma[1])
-
-  # spde$f$hyper.default$theta1$initial <- hyper.range.initial
-  # spde$f$hyper.default$theta2$initial <- hyper.sigma.initial
-
-
-  #-- Define the formula --#-1 + Intercept +
   formula <- (PM25 ~ 1 + sim_CMAQ_PM25 +
-                TEMP + WIND_X +
-                WIND_Y + #time.scale +
-                # f(time, CMAQ_PM25_30, model="rw2", scale.model = TRUE) +
-                # f(inla.group(REAL_TEMP, n = 1e2), model="rw2", scale.model = TRUE) + +
-                # f(inla.group(REAL_DEWP, n = 1e2), model="rw2", scale.model = TRUE) +
-                # f(inla.group(REAL_LON_WIND, n = 1e2),
-                #   model="rw2", scale.model = TRUE) +
-                # f(inla.group(REAL_LAT_WIND, n = 1e2),
-                #   model="rw2", scale.model = TRUE) +
+                TEMP + WIND_X + WIND_Y + 
                 f(field, model = spde, group = field.group,
                   control.group = list(model = "ar1"))
               )
@@ -248,32 +174,16 @@ for(r in 1){
   mod <- inla(formula,
               data = inla.stack.data(stack, spde = spde),
               family = "gaussian",
-              # control.family = list(hyper = list(theta = list(initial = 2))),
               control.predictor = list(A = inla.stack.A(stack), compute = TRUE),
               control.compute = list(openmp.strategy = "large"),
-              # control.mode=list( theta = log(rep(1e1, 4)), restart=FALSE),
-              # keep = FALSE,
               verbose = TRUE,
               num.threads = 1:1,
-              # control.fixed = list(prec.intercept = 1),
               control.inla = list(reordering = "metis",
-                                  # reordering = "amdc",
                                   tolerance = 1e-3,
-                                  # numint.maxfeval = 1e2,
                                   numint.relerr = 1e-3,
-                                  # numint.abserr = 1e-2,
-                                  # tolerance = 1e-2,
-                                  # tolerance.f = 1e-2,
-                                  # tolerance.g = 1e-2,
-                                  # tolerance.x = 1e-2,
-                                  # tolerance.step = 1e-2,
-                                  # stupid.search.max.iter = 10,
-                                  # optimise.strategy = "plain",
-                                  # # h = 1e-2,
                                   optimiser = "gsl",
                                   strategy  = "gaussian",
                                   int.strategy = "ccd",
-                                  # force.diagonal = T,
                                   stupid.search = F
                                   )
               )
@@ -317,12 +227,9 @@ for(r in 1){
   PM25.U95 <- ifelse(PM25.U95 < 0, 0, PM25.U95^2)
   PM25.Pred <- ifelse(PM25.Pred < 0, 0, PM25.Pred^2)
   PM25.L25 <- ifelse(PM25.L25 < 0, 0, PM25.L25^2)
-  Coverage <- mean(PM25.L25 < Da.pre$PM25 & PM25.U95 > Da.pre$PM25)
-
 
   spT <- spT_validation(z = Da.pre$PM25,
                         zhat = PM25.Pred,
-                        sigma = Pred.sd,
                         zhat.Ens = NULL,
                         names = F, CC = F)#[c(1, 4)]
   print(spT)
@@ -349,8 +256,6 @@ for(r in 1){
                        , PM25.Pred = PM25.Pred
                        , PM25.U95 = PM25.U95
                        , Pred.sd = Pred.sd
-                       , Coverage = Coverage
-                       # , INS = spT["INS"]
     )
 
   }else{
@@ -360,14 +265,12 @@ for(r in 1){
                              , PM25.Pred = PM25.Pred
                              , PM25.U95 = PM25.U95
                              , Pred.sd = Pred.sd
-                             , Coverage = Coverage
-                             # , INS = spT["INS"]
                   ))
   }
   # Beta <- as.data.frame(Beta)
   #
 
-  temp0 <- Validation.Group.Region(Inla, sigma = Inla$Pred.sd,
+  temp0 <- Validation.Group.Region(Inla, 
                                    col = c("PM25", "PM25.Pred"),
                                    by = "Flag")
   cat("\n.............................\n")
@@ -375,7 +278,7 @@ for(r in 1){
 }
 end.time <- Sys.time()
 print(end.time - start.time)
-writexl::write_xlsx(temp0, path = paste0("./Result/STARxz_INLAw_large_",
-                                         mesh$n,"_cv.xlsx"))
+# writexl::write_xlsx(temp0, path = paste0("./Result/STARxz_INLAw_large_",
+#                                          mesh$n,"_cv.xlsx"))
 writexl::write_xlsx(Inla, path = paste0("./Result/pred_STARxz_INLAw_large_",
                                         mesh$n,"_cv.xlsx"))

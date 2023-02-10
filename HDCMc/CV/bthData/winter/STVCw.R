@@ -1,7 +1,5 @@
-rm(list=ls())
-source("./R/PSTVB_Packages.R")
-data("SiteData", package = "ADCM")
-source("./R/util.R")
+source("./LoadPackages/RDependPackages.R")
+data("SiteData", package = "HDCM")
 library(spTDyn)
 {
   PM25_2015w <- obs_PM25_2015w  %>% setorderv(c("CITY", "ID","DATE_TIME"))
@@ -22,22 +20,10 @@ library(spTDyn)
     sqrt(PM25_2015w[, c("REAL_PM25", "sim50_CMAQ_PM25")])
 
   Covariate = c("sim50_CMAQ_PM25"
-                , "time.index"
                 , "sim_TEMP"
-                , "sim_SPRESS"
-                , "sim_WIND_Y"
                 , "sim_WIND_X"
+                , "sim_WIND_Y"
   );
-
-
-
-  # Cova <- which(base::colnames(PM25_2015w) %in% Covariate)
-  # if(length(Covariate) > 1){
-  #   for(k in 2:(length(Covariate)))
-  #   {
-  #     PM25_2015w[, Cova[k]] = scale(center = T, as.vector(
-  #       PM25_2015w[, Cova[k]]))[, 1]
-  #   }}
 
   setDF(PM25_2015w)
   Cov.Index <- which(base::colnames(PM25_2015w) %in% Covariate)
@@ -74,7 +60,6 @@ for(r  in region_num)
   post.gp <- spTDyn::GibbsDyn(REAL_PM25 ~ 1 + sim50_CMAQ_PM25 +
                                 tp(intercept) +
                                 # tp(sim50_CMAQ_PM25) +
-                                # (time.index) +
                                 (sim_TEMP) +
                                 (sim_WIND_X) +
                                 (sim_WIND_Y)
@@ -110,12 +95,9 @@ for(r  in region_num)
   PM25.Pred <- y.pred[2, ]#^2
   PM25.L25 <-  y.pred[1, ]
 
-  Coverage <- mean(PM25.L25 < Da.pre$REAL_PM25 & PM25.U95 > Da.pre$REAL_PM25)
-
 
   spT <- spT_validation(z = Da.pre$REAL_PM25,
                         zhat = PM25.Pred,
-                        sigma = NA,
                         zhat.Ens = NULL,
                         names = F, CC = F)#[c(1, 4)]
   print(spT)
@@ -141,8 +123,6 @@ for(r  in region_num)
                        , PM25.Pred = PM25.Pred
                        , PM25.U95 = PM25.U95
                        , Pred.sd = Pred.sd
-                       , Coverage = Coverage
-                       , INS = spT["INS"]
     )
     #Beta <- beta
 
@@ -153,15 +133,13 @@ for(r  in region_num)
                              , PM25.Pred = PM25.Pred
                              , PM25.U95 = PM25.U95
                              , Pred.sd = Pred.sd
-                             , Coverage = Coverage
-                             , INS = spT["INS"]
                   ))
     #Beta <- rbind(Beta, beta)
   }
   # Beta <- as.data.frame(Beta)
   #
 
-  temp0 <- Validation.Group.Region(STVC, Sigma = NA,
+  temp0 <- Validation.Group.Region(STVC, 
                                    col = c("REAL_PM25",
                                            "PM25.Pred"),
                                    by = "CITY")
@@ -170,19 +148,6 @@ for(r  in region_num)
 
 
 }
-temp0$CVG <- NULL
-da <- plyr::ddply(STVC
-                  , .(CITY) #, DAY, DATE_TIME
-                  , plyr::summarize
-                  , Coverage = mean(Coverage)
-                  # , INS = mean(INS)
-                  , .progress = "text")
-setnames(temp0, "Group", "CITY")
-temp <- temp0 %>% left_join(da, by = "CITY")
-temp$Coverage <- round(ifelse(is.na(temp$Coverage),
-                              mean(temp$Coverage, na.rm = T),
-                              temp$Coverage), 4)
-temp
-writexl::write_xlsx(temp, path = "./Result/STVCxz_w_cv.xlsx")
-writexl::write_xlsx(STVC, path = "./Result/pred_STVCxz_w_cv.xlsx")
 
+# writexl::write_xlsx(temp, path = "./Result/STVCxz_w_cv.xlsx")
+writexl::write_xlsx(STVC, path = "./Result/pred_STVCxz_w_cv.xlsx")

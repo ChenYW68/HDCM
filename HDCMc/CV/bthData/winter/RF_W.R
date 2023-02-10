@@ -1,7 +1,6 @@
 rm(list=ls())
-source("./R/PSTVB_Packages.R")
-data("SiteData", package = "ADCM")
-source("./R/util.R")
+source("./LoadPackages/RDependPackages.R")
+data("SiteData", package = "HDCM")
 ###################################################################
 #                           1. Data loading
 ###################################################################
@@ -37,7 +36,6 @@ PM25_2015w[, c("REAL_PM25", "sim50_CMAQ_PM25")] <-
 
 Covariate <- c("sim50_CMAQ_PM25"
                , "sim_TEMP"
-               # , "SPRESS"
                , "sim_WIND_X"
                , "sim_WIND_Y"
                , "time.index"
@@ -91,9 +89,6 @@ for(City in 1:length(City.Name))
   #     quantile(x, c(0.025, 0.975)))
   # })
   # 
-  # t(pred.rf.int)
-  # library(rfinterval)
-  source("./R/util.R")
   output <- randomForest.Model(REAL_PM25~., train_data = Da.mod, 
                        test_data = Da.pre[, -which(base::colnames(Da.pre) == 
                                                      "REAL_PM25")],
@@ -109,34 +104,10 @@ for(City in 1:length(City.Name))
   PM25.U95 <- ifelse(output$quantreg_interval$upper < 0, 0, 
                      output$quantreg_interval$upper^2)
   
-  
-  
-  # interval_range <- rep(95, length(Da.pre$REAL_PM25))
-  # alpha <- (100 - interval_range) / 100
-  # lower <- qnorm(alpha / 2, sqrt(PM25.Pred))#quantile(PM25.Pred, probs = alpha / 2)#qnorm(alpha / 2, Da.pre$REAL_PM25)
-  # upper <- qnorm((1 - alpha / 2), sqrt(PM25.Pred))#quantile(PM25.Pred, probs = (1 - alpha / 2))#qnorm((1 - alpha / 2), Da.pre$REAL_PM25)
-  # 
-  # INS <-  scoringutils::interval_score(
-  #   true_values = Da.pre$REAL_PM25,
-  #   lower = lower,
-  #   upper = upper,
-  #   interval_range = 95,
-  #   weigh = TRUE,
-  #   separate_results = FALSE
-  # )
-  
-  # PM25.U95 <-  output$oob_interval$upper^2
-  # PM25.Pred <- output$testPred^2
-  # PM25.L25 <-  output$quantreg_interval$lo^2
-  
-  # mean(PM25.L25 < y & PM25.U95 > y)
-  
-  # mean(output$oob_interval$lo^2 < y & output$oob_interval$up^2 > y)
-  # mean(output$sc_interval$lo^2 < y & output$sc_interval$up^2 > y)
+
   
   spT <- spT_validation(z = Da.pre0$REAL_PM25, 
                         zhat = PM25.Pred, 
-                        sigma = PM25.Pred.sd,
                         zhat.Ens = NULL, 
                         names = F, CC = F)#[c(1, 4)]
   print(spT)
@@ -153,39 +124,25 @@ for(City in 1:length(City.Name))
                      PM25.Pred = PM25.Pred,
                      low.Pred = PM25.L25, 
                      upp.Pred = PM25.U95,
-                     PM25.Pred.sd = PM25.Pred.sd,
-                     Coverage = Coverage,
-                     INS = spT["INS"])
+                     PM25.Pred.sd = PM25.Pred.sd)
   }else{
     RF <- rbind(RF, data.frame(Da.pre0[, INDX], 
                                PM25.Pred = PM25.Pred,
                                low.Pred = PM25.L25, 
                                upp.Pred = PM25.U95,
-                               PM25.Pred.sd = PM25.Pred.sd,
-                               Coverage = Coverage,
-                               INS = spT["INS"])
+                               PM25.Pred.sd = PM25.Pred.sd)
     )
   }
   cat("....................RF..................\n\n")
   cat("       the ", City, "th City: ", City.Name[City], "\n\n")
   cat("....................RF..................\n\n")
-  temp0 <- Validation.Group.Region(RF, sigma = RF$PM25.Pred.sd, 
-                                         col = c("REAL_PM25", "PM25.Pred"),
+  temp0 <- Validation.Group.Region(RF, col = c("REAL_PM25", "PM25.Pred"),
                                          by = "CITY")
   cat("\n.............................\n")
   print(temp0)
   # cat("........................................\n\n")
 } 
-temp0$CVG <- NULL
-setnames(temp0, "Group", "CITY")
-temp <- temp0 %>% left_join(distinct(RF[, c("CITY", "Coverage")]),
-                             by = "CITY")
 
-temp$Coverage <- round(ifelse(is.na(temp$Coverage), mean(temp$Coverage, na.rm = T),
-                              temp$Coverage), 4)
-# temp$INS <- round(ifelse(is.na(temp$INS), mean(temp$INS, na.rm = T),
-#                          temp$INS), 4)
-temp
-writexl::write_xlsx(temp, path = "./Result/RFw_cv.xlsx")
+# writexl::write_xlsx(temp, path = "./Result/RFw_cv.xlsx")
 writexl::write_xlsx(RF, path = "./Result/pred_RFw_cv.xlsx")
-# save(RF, file = paste0(file, "RF_W", ".RData"))
+

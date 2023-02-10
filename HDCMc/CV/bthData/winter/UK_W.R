@@ -1,7 +1,6 @@
 rm(list=ls())
-source("./R/PSTVB_Packages.R")
-data("SiteData", package = "ADCM")
-source("./R/util.R")
+source("./LoadPackages/RDependPackages.R")
+data("SiteData", package = "HDCM")
 {
 
   PM25_2015w <- obs_PM25_2015w %>% setorderv(c("CITY", "ID","DATE_TIME"))
@@ -26,7 +25,6 @@ source("./R/util.R")
 
   Covariate <- c("sim50_CMAQ_PM25"
                 # , "sim_TEMP"
-                # # , "sim_SPRESS"
                 # , "sim_WIND_X"
                 # , "sim_WIND_Y"
                 # , "time.index"
@@ -215,50 +213,28 @@ setDT(PM25_2015w)
           PM25.L25 <- ifelse(PM25.L25 < 0, 0, PM25.L25)
           PM25.U95 <- ifelse(PM25.U95 < 0, 0, PM25.U95)
 
-          # IGN <- verification::crps(Da.pre$REAL_PM25,
-          #                           cbind(PM25.Pred, (PM25.Pred)))$IGN
-          # interval_range <- rep(95, length(Da.pre$REAL_PM25))
-          # alpha <- (100 - interval_range) / 100
-          # lower <- qnorm(alpha / 2, sqrt(PM25.Pred))#quantile(PM25.Pred, probs = alpha / 2)#qnorm(alpha / 2, Da.pre$REAL_PM25)
-          # upper <- qnorm((1 - alpha / 2), sqrt(PM25.Pred))#quantile(PM25.Pred, probs = (1 - alpha / 2))#qnorm((1 - alpha / 2), Da.pre$REAL_PM25)
-          #
-          # INS <-  scoringutils::interval_score(
-          #   true_values = sqrt(Da.pre$REAL_PM25),
-          #   lower = lower,
-          #   upper = upper,
-          #   interval_range = 95,
-          #   weigh = TRUE,
-          #   separate_results = FALSE
-          # )
           spT <- spT_validation(z = Da.pre$REAL_PM25,
                                 zhat = PM25.Pred,
-                                sigma = NA,
                                 zhat.Ens = NULL,
                                 names = F, CC = F)#[c(1, 4)]
           print(spT)
-          Coverage <- mean(PM25.L25 < Da.pre$REAL_PM25 & PM25.U95 > Da.pre$REAL_PM25)
-
-
+         
           # Kriging.Fit
           if(City == 1 & Year == year_range[1]  & Month == month_range[1] & Day == day_range[1])
           {
 
             UK <- data.frame(Da.pre[, colNames], PM25.Pred = PM25.Pred,
                              low.Pred = PM25.L25, upp.Pred = PM25.U95,
-                             PM25.Pred.sd = PM25.Pred.sd,
-                             Coverage = Coverage,
-                             INS = spT["INS"]
+                             PM25.Pred.sd = PM25.Pred.sd
             )
           }else{
             UK <- rbind(UK
                         , data.frame(Da.pre[, colNames], PM25.Pred = PM25.Pred,
                                      low.Pred = PM25.L25, upp.Pred = PM25.U95,
-                                     PM25.Pred.sd = PM25.Pred.sd,
-                                     Coverage = Coverage,
-                                     INS = spT["INS"])
+                                     PM25.Pred.sd = PM25.Pred.sd)
             )
           }
-          temp0 <- Validation.Group.Region(UK, #sigma = NA,
+          temp0 <- Validation.Group.Region(UK,
                                            col = c("REAL_PM25", "PM25.Pred"),
                                            by = "CITY")
           cat("\n.............................\n")
@@ -269,25 +245,6 @@ setDT(PM25_2015w)
     }
   }
 }
-temp0$CVG <- NULL
-setDT(UK)
-# save(UK, file = paste0(file, "/UK_W.RData"))
-# temp1 <- ADCM::Validation.Group.Region(UK,
-#                                col = c("REAL_PM25",
-#                                        "PM25.Pred"),
-#                                by = "CITY")
-da <- plyr::ddply(UK
-                    , .(CITY) #, DAY, DATE_TIME
-                    , plyr::summarize
-                    , Coverage = mean(Coverage)
-                    # , INS = mean(INS)
-                    , .progress = "text")
-setnames(temp0, "Group", "CITY")
-temp <- temp0 %>% left_join(da, by = "CITY")
-temp$Coverage <- round(ifelse(is.na(temp$Coverage), mean(temp$Coverage, na.rm = T),
-                        temp$Coverage), 4)
-# temp$INS <- round(ifelse(is.na(temp$INS), mean(temp$INS, na.rm = T),
-#                               temp$INS), 4)
-temp
-writexl::write_xlsx(temp0, path = "./Result/UKxz_w_cv.xlsx")
-writexl::write_xlsx(UK, path = "./Result/pred_UKxz_w_cv.xlsx")
+
+# writexl::write_xlsx(temp0, path = "./Result/UKx_w_cv.xlsx")
+writexl::write_xlsx(UK, path = "./Result/pred_UKx_w_cv.xlsx")

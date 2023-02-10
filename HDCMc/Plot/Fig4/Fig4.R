@@ -1,6 +1,6 @@
 rm(list=ls())
 source("./LoadPackages/RDependPackages.R")
-data("China_BTH_GeoMap", package = "ADCM")
+data("China_BTH_GeoMap", package = "HDCM")
 data("SiteData", package = "HDCM")
 obs_PM25_2015w <- obs_PM25_2015w
 setDF(obs_PM25_2015w);setDF(Site);
