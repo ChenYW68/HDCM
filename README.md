@@ -79,7 +79,9 @@ PM25_2015w$Flag <- ifelse(PM25_2015w$ID %in% train.id, "train", "test")
 #--------------------------------------------------------------------------------------
 rm(NAQPMS_CMAQ_Dataset_2015W)
 #--------------------------------------------------------------------------------------
-#     1. Create a mesh through a triangulation scheme ``INLA``
+# 1. Create a mesh through a triangulation scheme based on the ``INLA`` 
+#    package (Lindgren and Rue, 2015), a spatial partitioning procedure is 
+#    embedded in our triangulation scheme.
 #--------------------------------------------------------------------------------------
 Ch <- 0.05; R <- 3
 H.basic.data <- CreateGrid(PM25_2015w,
@@ -110,9 +112,16 @@ H.basic.data <- CreateGrid(PM25_2015w,
                            Grid = TRUE,
                            scale = 5)
 H.basic.data$plot.grid
-sum(H.basic.data$Grid.infor$summary$Knots.count)
-
-
+```
+<figure id="Figure2">
+    <p align="center">
+  <img src="./HDCMc/figure/FigS3_b.jpg" width=50% height=50%>
+  </p>
+  <figcaption
+  <strong>Figure 1:</strong> Maps of grid cells of the CMAQ and the NAQPMS. The symbols ``+'' represent the centroids of 16{,} 093 9km CMAQ grids. The symbols ``*'' denote the centroids of $6{,} 382$ 15km NAQPMS grids.
+  </figcaption>
+</figure>
+```
 ds <- max(H.basic.data$Grid.infor$summary$Hdist*0.23)
 G <- H.basic.data$Grid.infor$summary$Hdist
 apply(G<ds, 1, sum)/ncol(G)
