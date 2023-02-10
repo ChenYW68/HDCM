@@ -2,9 +2,6 @@
 
 This Github page provides code for reproducing the results in the manuscript:``Efficient and Effective Calibration of Numerical Model Outputs Using Hierarchical Dynamic Model'' by Y. Chen, X. Chang, B. Zhang, and H. Huang. 
 
-In this paper, we propose a Bayesian hierarchical dynamic model (``HDCM``) and develop an algorithm based on variational Bayes (VB) and ensemble Kalman smoother (EnKS) to accelerate the parameter estimation and calibration procedure. To further improve the scalability of the HDCM, a Laplace approximation and a space-partitioning-based procedure are embedded in VB and EnKS, respectively. The VB and space-partitioning-based EnKS (spEnKS) have been implemented via our an R package - [HDCM](https://github.com/ChenYW68/HDCM/tree/main/HDCMc/LoadPackages). 
-
-
 ## Datasets
 The effectiveness and efficiency of the ``HDCM`` is demonstrated via two datasets: 
 -	 Moderately large datasets: $PM_{2.5}$ concentrations are from the monitoring stations and the outputs of Community Multiscale Air
@@ -32,19 +29,17 @@ Quality (CMAQ, Byun and Schere, (2006)) system for China's Beijing-Tianjin-Hebei
   </figcaption>
 </figure>
 
+###
+
+In this paper, we propose a Bayesian hierarchical dynamic model (``HDCM``) and develop an algorithm based on variational Bayes (VB) and ensemble Kalman smoother (EnKS, Evensen and Van Leeuwen (2000)) to accelerate the parameter estimation and calibration procedure. To further improve the scalability of the HDCM, a Laplace approximation and a space-partitioning-based procedure are embedded in VB and EnKS, respectively. The VB and space-partitioning-based EnKS (spEnKS) have been implemented via our an R package - [HDCM](https://github.com/ChenYW68/HDCM/tree/main/HDCMc/LoadPackages).
 
 ## Codes
 There are two parts for our codes: 
-1. The VB-spENKS algorithm was written into the [HDCM](https://github.com/ChenYW68/HDCM/tree/main/HDCMc/LoadPackages) package in the R statistical environment;
+1. The VB-spEnKS algorithm was written into the [HDCM](https://github.com/ChenYW68/HDCM/tree/main/HDCMc/LoadPackages) package in the R statistical environment;
 2. A project entitled ``[HDCMc.Rproj](https://github.com/ChenYW68/HDCM/tree/main/HDCMc)'' in the [RStudio](https://www.rstudio.com/products/rstudio/download/) environment was built to reproduce all the results (e.g., figures and tables) in this work. 
 
-```
-# Require core package
-1. R >= 4.2.1
-2. Rcpp >= 1.0.7
-3. mgcv >= 1.8-41
-```
 ## Installing and loading dependent packages
+- Depends:	R (≥ 4.2.1)
 -	Open the project file, ``[HDCMc.Rproj](https://github.com/ChenYW68/HDCM/tree/main/HDCMc/LoadPackages)'', based on the [RStudio](https://www.rstudio.com/products/rstudio/download/) tool.
 
 -	Install all the dependent packages via the following command:
@@ -82,22 +77,22 @@ rm(NAQPMS_CMAQ_Dataset_2015W)
 #    package (Lindgren and Rue, 2015), a spatial partitioning procedure is 
 #    embedded in our triangulation scheme.
 #--------------------------------------------------------------------------------------
-Ch <- 0.05; R <- 3; Cs <- 5e-2; Ct <- 1; Ne <- 100
+Ch <- 0.05; R <- 3; Cs <- 8e-2; Ct <- 1; Ne <- 100
 H.basic.data <- CreateGrid(PM25_2015w,
                            Site,
                            Map = fortify(larg_bth_map),
                            ## 2042
-                           max.edge = c(.35, .7),
-                           offset = c(1e-1, 0.6),
-                           cutoff = .23, # 0.5
+                           # max.edge = c(.35, .7),
+                           # offset = c(1e-1, 0.6),
+                           # cutoff = .23, # 0.5
                            ##3158
                            # max.edge = c(.23, .4), 
                            # offset = c(1e-1, 0.9), 
                            # cutoff = 0.3,
                            ## 10103
-                           # max.edge = c(.21, .3),
-                           # offset = c(1e-1, 0.9), 
-                           # cutoff = 0.11,
+                           max.edge = c(.21, .3),
+                           offset = c(1e-1, 0.9), 
+                           cutoff = 0.11,
                            distance.scale = 1e3,
                            R = R,
                            col = "blue",
@@ -130,12 +125,9 @@ H.basic.data$plot.grid
 PM25_2015w[, c("sim_CMAQ_PM25")] <- sqrt(PM25_2015w[, c("sim_CMAQ_PM25")])
 
 #-- Sellect the time rang of data
-PM25_2015w <- PM25_2015w %>%
-  dplyr::filter(
-    between((as.Date(DATE_TIME)),
-            (as.Date(paste0(2015, "-", "11-01"))),
-            (as.Date(paste0(2015, "-", "11-30"))))
-  )
+PM25_2015w <- PM25_2015w %>% dplyr::filter(between(as.Date(DATE_TIME), 
+                                                   as.Date(paste0(2015, "-", "11-01")),
+                                                   as.Date(paste0(2015, "-", "11-30"))))
   
 #-- Combine other variables with time variable
 DATE_TIME <- unique(PM25_2015w$DATE_TIME) %>% sort()
