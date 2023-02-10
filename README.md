@@ -11,7 +11,7 @@ The effectiveness and efficiency of the HDCM is demonstrated via two datasets:
 Quality (CMAQ, Byun and Schere, (2006)) system for China's Beijing-Tianjin-Hebei (BTH) region, and the sizes are $68 \times 92 = 6{,}256$ spatio-temporal observations and $5{,}587 \times 92 = 514{,}004$ spatio-temporal outputs, respectively 
 - Large datasets: $PM_{2.5}$ concentrations are from the reanalysis $PM_{2.5}$ outputs of the Nested Air Quality Prediction Modeling System (NAQPMS, Wang et al., (2006)) and from the raw $PM_{2.5}$ outputs of the CMAQ, and the sizes are $6{,}382 \times 30 = 191{,}460$ reanalysis spatio-temporal outputs and $16{,}093 \times 30 = 482{,}790$ spatio-temporal outputs, respectively 
 
-# An illustration for the first dataset in the BTH region
+<!-- # An illustration for the first dataset in the BTH region
 <figure id="Figure1">
   <p align="center">
   <img src="./HDCMc/figure/Fig1.jpg" width=50% height=50%>
@@ -19,11 +19,10 @@ Quality (CMAQ, Byun and Schere, (2006)) system for China's Beijing-Tianjin-Hebei
   <figcaption
   <strong>Figure 1:</strong> (a) Map of China. (b) Zoomed-in map of the BTH region along with locations of $68$ monitoring stations (red dots) and centroids of $5{,}587$ 9-km CMAQ grids (gray dots).} (c)-(e) Scatter plots of CMAQ $PM_{2.5}$ forecasts versus actual observations at Zhangjiakou, Beijing, and Hengshui in different seasons, where ``Corr'' represents the Pearson correlation coefficient between CMAQ $PM_{2.5}$ outputs and observed $PM_{2.5}$ concentrations. Three reference lines with the slope k = 0.5, 1, and  2 are colored in gray.
   </figcaption>
-</figure>
+</figure> -->
 
 
-# An illustration for the second dataset
-
+# An illustration for the reanalysis dataset
 
 <figure id="Figure2">
     <p align="center">
