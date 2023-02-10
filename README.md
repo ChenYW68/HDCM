@@ -36,7 +36,7 @@ Quality (CMAQ, Byun and Schere, (2006)) system for China's Beijing-Tianjin-Hebei
 
 
 ## Codes
-There are two parts to our codes: 
+There are two parts for our codes: 
 1. The VB-spENKS algorithm was written into the [HDCM](https://github.com/ChenYW68/HDCM/tree/main/HDCMc/LoadPackages) package in the R statistical environment;
 2. A project entitled ``[HDCMc.Rproj](https://github.com/ChenYW68/HDCM/tree/main/HDCMc)'' in the [RStudio](https://www.rstudio.com/products/rstudio/download/) environment was built to reproduce all the results (e.g., figures and tables) in this work. 
 
