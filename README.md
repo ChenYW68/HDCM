@@ -15,7 +15,7 @@ This Github page provides code for reproducing the results in the manuscript:``E
 
 
 <figure id="Figure2">
-  <img src="./HDCMc/figure/FigS2.jpg",width=50% height=50%>
+  <img src="./HDCMc/figure/FigS2.jpg" width=50% height=50%>
   <figcaption
   <strong>Figure 1:</strong> Maps of grid cells of the CMAQ and the NAQPMS. The symbols ``+'' represent the centroids of 16{,} 093 9km CMAQ grids. The symbols ``*'' denote the centroids of $6{,} 382$ 15km NAQPMS grids.
   </figcaption>
