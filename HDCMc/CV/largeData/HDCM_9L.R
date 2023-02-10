@@ -87,10 +87,9 @@ range(H.basic.data$Grid.infor$summary$Hdist)*0.05
 PM25_2015w <- PM25_2015w %>%
   dplyr::filter(
     # YEAR %in% year,
-    between((as.Date(DATE_TIME)),
-            (as.Date(paste0(2015, "-", "11-01"))),
-            (as.Date(paste0(2015, "-", "11-30"))))#,
-    # between(MONTH, 10, 12),
+    between(as.Date(DATE_TIME),
+            as.Date(paste0(2015, "-", "11-01")),
+            as.Date(paste0(2015, "-", "11-30")))
   )
 colnames(PM25_2015w)
 
