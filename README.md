@@ -39,6 +39,7 @@ There are two parts for our codes:
 2. A project entitled ``[HDCMc.Rproj](https://github.com/ChenYW68/HDCM/tree/main/HDCMc)'' in the [RStudio](https://www.rstudio.com/products/rstudio/download/) environment was built to reproduce all the results (e.g., figures and tables) in this work. 
 
 ## Installing and loading dependent packages
+- Depends:	R (≥ 4.2.1)
 -	Open the project file, ``[HDCMc.Rproj](https://github.com/ChenYW68/HDCM/tree/main/HDCMc/LoadPackages)'', based on the [RStudio](https://www.rstudio.com/products/rstudio/download/) tool.
 
 -	Install all the dependent packages via the following command:
