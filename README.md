@@ -58,41 +58,30 @@ Moreover, the [HDCM](https://github.com/ChenYW68/HDCM/tree/main/HDCMc/LoadPackag
  install.packages("./LoadPackages/HDCM_1.0.zip", repos = NULL, type = "win.binary")
 ```
 
-## An example for the proposed HDCM
+## An example of the proposed HDCM for large spatio-temporal data
 ```
-# install.packages("./LoadPackages//HDCM_0.1.0.zip", 
-#                  repos = NULL,
-#                  type = "win.binary")
-
+# install.packages("./LoadPackages//HDCM_0.1.0.zip", repos = NULL, type = "win.binary")
 rm(list=ls())
 source("./LoadPackages/RDependPackages.R")
 load("./data/NAQPMS_CMAQ_Dataset_2015W.RData")
 load("./data/Large_BTH_map.RData")
 Site <- Site[distToNearestCAMQpoint <= 15]
 set.seed(12345)
-# range(rdist(Site[, 4:5]))/1E3
-# 
+PM25_2015w <- NAQPMS_CMAQ_Dataset_2015W[distToNearestCAMQpoint <= 15]
+#--------------------------------------------------------------------------------------
+#--- Training and test datasets
 n.train <- 5000
 train.id <- sample(Site$ID, n.train, replace = F)
 cat("The number of training set:", length(train.id))
 
-PM25_2015w <- NAQPMS_CMAQ_Dataset_2015W[distToNearestCAMQpoint <= 15]
 Site$Flag <- ifelse(Site$ID %in% train.id, "train", "test")
 PM25_2015w$Flag <- ifelse(PM25_2015w$ID %in% train.id, "train", "test")
-
-temp <- Site[Site$Flag == "test", ]
-plot(temp$LON, temp$LAT)
-
+#--------------------------------------------------------------------------------------
 rm(NAQPMS_CMAQ_Dataset_2015W)
-colnames(PM25_2015w)
-# setnames(PM25_2015w, "PM25", "REAL_PM25")
-
-######################################################################
-#                   1. Create grid
-######################################################################
-
-Ch <- 0.05
-n.grps <- 3
+#--------------------------------------------------------------------------------------
+#     1. Create a mesh through a triangulation scheme ``INLA``
+#--------------------------------------------------------------------------------------
+Ch <- 0.05; R <- 3
 H.basic.data <- CreateGrid(PM25_2015w,
                            Site,
                            Map = fortify(larg_bth_map),
@@ -109,7 +98,7 @@ H.basic.data <- CreateGrid(PM25_2015w,
                            # offset = c(1e-1, 0.9), 
                            # cutoff = 0.11,
                            distance.scale = 1e3,
-                           n.grps = n.grps,
+                           R = R,
                            col = "blue",
                            size = 1,
                            site.id = "ID",
@@ -250,7 +239,7 @@ m <- sum(H.basic.data$Grid.infor$summary$Knots.count)
 
 
 
-tab <- paste0("L", n.grps^2, "_", tab.1, "_", tab.2, "_", n.train, "_", m)
+tab <- paste0("L", R^2, "_", tab.1, "_", tab.2, "_", n.train, "_", m)
 start.time <- Sys.time()
 CV_T_Dist_W <- HDCM(Tab = tab,
                     Site = Site,
