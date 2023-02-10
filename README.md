@@ -8,8 +8,8 @@ In this paper, we propose a Bayesian hierarchical dynamic model (HDCM) and devel
 # Datasets
 The effectiveness and efficiency of the HDCM is demonstrated via two datasets: 
 -	 Moderately large datasets: $PM_{2.5}$ concentrations are from the monitoring stations and the outputs of Community Multiscale Air
-Quality (CMAQ, Byun and Schere, (2006)) system for China's Beijing-Tianjin-Hebei (BTH) region, and the sizes are $68 \times 92 = 6{,}256$ observations and $5{,}587 \times 92 = 514{,}004$ $PM_{2.5}$ outputs, respectively 
-- Large datasets: $PM_{2.5}$ concentrations are from the reanalysis $PM_{2.5}$ outputs of the Nested Air Quality Prediction Modeling System (NAQPMS, Wang et al., (2006)) and from the raw $PM_{2.5}$ outputs of the CMAQ, and the sizes are $6{,}382 \times 30 = 191{,}460$ reanalysis $PM_{2.5}$ outputs and $16{,}093 \times 30 = 482{,}790$ $PM_{2.5}$ outputs, respectively 
+Quality (CMAQ, Byun and Schere, (2006)) system for China's Beijing-Tianjin-Hebei (BTH) region, and the sizes are $68 \times 92 = 6{,}256$ spatio-temporal observations and $5{,}587 \times 92 = 514{,}004$ spatio-temporal outputs, respectively 
+- Large datasets: $PM_{2.5}$ concentrations are from the reanalysis $PM_{2.5}$ outputs of the Nested Air Quality Prediction Modeling System (NAQPMS, Wang et al., (2006)) and from the raw $PM_{2.5}$ outputs of the CMAQ, and the sizes are $6{,}382 \times 30 = 191{,}460$ reanalysis spatio-temporal outputs and $16{,}093 \times 30 = 482{,}790$ spatio-temporal outputs, respectively 
 
 # An illustration for the first dataset in the BTH region
 <figure id="Figure1">
