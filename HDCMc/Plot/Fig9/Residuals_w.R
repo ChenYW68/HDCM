@@ -1,34 +1,25 @@
-source("./R/PSTVB_Packages.R")
-
+rm(list=ls())
+source("./LoadPackages/RDependPackages.R")
+data("SiteData", package = "HDCM")
 ###################################################################
 #                             HDCM
 ###################################################################
-load("./Calibration/Result/HDCM_1_23_3.RData")
-load("./data/SiteData.RData")
+load("./Full_Data_Model/all_HDCM_1_23_3.RData")
 
-# in winter
-# HDCM <- Tab[grepl("Fit_HDCM2_W", Tab)]
-# load(paste0(file, "data/",HDCM))
-# load(paste0(file, "data/", "train_HDCM2_W.RData"))
-# y.fit <- test.HDCM(test = train, Ks = Re$Ks, PIU = Re$PIU, seed = 1234)
-# y.fit <- (apply(y.fit, c(1, 2), quantile, prob = 0.5))
-
-
-
-HDCM2_Residuals <- as.vector(wHDCM$Yts - wHDCM$Yts.Pred[2,,])
+HDCM2_Residuals <- as.vector(wHDCM[["true.Yts"]] - wHDCM[["Fitted.Yts"]][2,,])
 range(HDCM2_Residuals)
 ###################################################################
 #                             CMAQ
 ###################################################################
 x_range <- c(-200, 200)
-density_range <- c(0, 0.04)
+density_range <- c(0, 0.035)
 
 # In winter
 {
   CMAQ_Residuals <- as.vector(obs_PM25_2015w$sim50_CMAQ_PM25 -
                                 obs_PM25_2015w$REAL_PM25)
   range(CMAQ_Residuals)
-
+  
   da <- rbind(data.frame(index = 1:length(CMAQ_Residuals),
                          error = CMAQ_Residuals,
                          method = "Before calibration"),
@@ -36,9 +27,9 @@ density_range <- c(0, 0.04)
                          error = HDCM2_Residuals,
                          method = "After calibration"))
   ggplot(da) + geom_density(aes(x = error, linetype = method))
-
+  
   setDT(da)
-
+  
   p <- ggplot(data = da, aes(colour = method, group = method, fill = method)) +
     geom_density(aes(error), alpha = 0.2, adjust = 3, size = 1)
   # facet_wrap(~ LAT_label, ncol = 4
@@ -68,7 +59,7 @@ density_range <- c(0, 0.04)
     scale_x_continuous(limits = c(x_range[1], x_range[2]),
                        breaks = seq(x_range[1], x_range[2],
                                     by = 2e2)) +
-    geom_text(aes(x = -400, y = 0.04
+    geom_text(aes(x = -200, y = 0.035
                   , label =  "(a)"),
               # family = c("sans"),
               # fontface = 'bold',
@@ -90,7 +81,7 @@ density_range <- c(0, 0.04)
           , strip.text =  element_text(size = 16, colour = "black")) +
     guides(linetype = guide_legend(override.aes = list(size = 1.5),
                                    nrow = 2, byrow = TRUE))
-
+  
 }
 
 da$method <- ordered(da$method, levels = c("Before calibration",
@@ -98,10 +89,10 @@ da$method <- ordered(da$method, levels = c("Before calibration",
 {
   p2 <- ggplot(da, aes(x = index, y = error)) +
     geom_point(aes(shape = method, col = method), size = 4) +
-
+    
     scale_color_manual(name = '', values =  c("black", "blue"), labels = label)+
     theme_bw() + ylim(x_range[1], x_range[2]) +
-    geom_text(aes(x = 1, y = 400
+    geom_text(aes(x = 1, y = 200
                   , label =  "(b)"),
               # family = c("sans"),
               # fontface = 'bold',

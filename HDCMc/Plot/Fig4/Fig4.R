@@ -1,27 +1,24 @@
 rm(list=ls())
-source("./R/PSTVB_Packages.R")
-library(CovUtil)
-source("./R/CreateGrid.R")
-source("./R/util.R")
-load("./data/SiteData.RData")
-load("./data/bth_map.RData")
+source("./LoadPackages/RDependPackages.R")
+data("China_BTH_GeoMap", package = "ADCM")
+data("SiteData", package = "HDCM")
 obs_PM25_2015w <- obs_PM25_2015w
 setDF(obs_PM25_2015w);setDF(Site);
 
-INDX <- which(colnames(Site) %in% c("LON_X", "LAT_Y"))
-Site <- spCoords.transform(Site[, -INDX], method = 1)
-setDF(obs_PM25_2015w)
-INDX <- which(colnames(obs_PM25_2015w) %in% c("LON_X", "LAT_Y"))
-PM25_2015w <- spCoords.transform(obs_PM25_2015w[, -INDX],
-                                 method = 1)
+# INDX <- which(colnames(Site) %in% c("LON_X", "LAT_Y"))
+# Site <- spCoords.transform(Site[, -INDX], method = 1)
+# setDF(obs_PM25_2015w)
+# INDX <- which(colnames(obs_PM25_2015w) %in% c("LON_X", "LAT_Y"))
+# PM25_2015w <- spCoords.transform(obs_PM25_2015w[, -INDX],
+#                                  method = 1)
 
 
 
 Ch <- 0.23
 n.grps <- 2
-H.basic.data <- CreateGrid(PM25_2015w,
+H.basic.data <- CreateGrid(obs_PM25_2015w,
                            sample.coords = Site,
-                           Map = bth_map,
+                           Map = BTH_City_Map,
                            max.edge = c(.35, .65),
                            offset = c(1e-1, 0.5),
                            cutoff = 0.04,
@@ -34,8 +31,7 @@ H.basic.data <- CreateGrid(PM25_2015w,
                            ch = Ch,
                            method = "Wendland",
                            distance.method = 1,
-                           hjust = c(-1, 1, -1, 0.5),
-                           way = 1)
+                           hjust = c(-1, 1, -1, 0.5))
 
 
 
@@ -45,7 +41,7 @@ H.basic.data <- CreateGrid(PM25_2015w,
 
 grid.coords <- H.basic.data$grid.coords
 mesh <- H.basic.data$mesh
-Map <- bth_map
+Map <- BTH_City_Map
 grid.coords$cluster <- as.factor(grid.coords$cluster)
 p <- ggplot(data = grid.coords, aes(x = LON, y = LAT)) +
   geom_point(size = 1E-5)

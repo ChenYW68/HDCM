@@ -1,7 +1,7 @@
 # in winter
-
-source("./R/PSTVB_Packages.R")
-
+rm(list=ls())
+source("./LoadPackages/RDependPackages.R")
+data("SiteData", package = "HDCM")
 file <- "./Result/"
 ######################################################################
 
@@ -17,12 +17,11 @@ if(length(Tab) == 0){
 }else{
 
   ######################################################################
-  load(paste0("./Result/WH_1_23_3.RData"))
+  load(paste0("./Result/HDCMw.RData"))
   cv.HDCM <- CVw_BTH
-  load(paste0("./Result/WH2_2_23_3.RData"))
+  load(paste0("./Result/HDCM2w.RData"))
   cv.HDCM2 <- CVw_BTH
   
-  data("SiteData", package = "ADCM")
   setDF(obs_PM25_2015w)
   setDF(Site)
   colnames(obs_PM25_2015w)
@@ -38,6 +37,7 @@ if(length(Tab) == 0){
   ######################################################################
   HDCM <- NULL
   for (r in 1:13) {
+    cv.HDCM[[r]]$Pred <- cv.HDCM[[r]]$Predict.Yts 
     da <- as.data.frame(cv.HDCM[[r]]$Pred)
     da$DATE_TIME <- as.Date(rownames(cv.HDCM[[r]]$Pred))
     HDCM <- rbind(HDCM, gather(
@@ -67,6 +67,7 @@ if(length(Tab) == 0){
   ######################################################################
   HDCM2 <- NULL
   for (r in 1:13) {
+    cv.HDCM2[[r]]$Pred <- cv.HDCM2[[r]]$Predict.Yts 
     da <- as.data.frame(cv.HDCM2[[r]]$Pred)
     da$DATE_TIME <- as.Date(rownames(cv.HDCM2[[r]]$Pred))
     HDCM2 <- rbind(HDCM2, gather(
@@ -109,7 +110,7 @@ if(length(Tab) == 0){
   ######################################################################
   #  UK
   ######################################################################
-  table.oracle <- "./Result/pred_UKw_cv.xlsx"
+  table.oracle <- "./Result/pred_UKx_w_cv.xlsx"
   UK <- as.data.table(as.data.frame(readxl::read_excel(path = table.oracle)))
   colnames(UK)
   setDF(UK)
@@ -156,7 +157,7 @@ if(length(Tab) == 0){
   ######################################################################
   #  STVC
   ######################################################################
-  table.oracle <- "./Result/pred_STVCw_cv.xlsx"
+  table.oracle <- "./Result/pred_STVCxz_w_cv.xlsx"
   STVC <- as.data.table(as.data.frame(readxl::read_excel(path = table.oracle)))
   colnames(STVC)
   setDF(STVC)

@@ -1,9 +1,10 @@
-source("./R/PSTVB_Packages.R")
-file = "./2_Full_Data_Model/"
-Tab <- list.files(paste0(file, "/data/"))
-load("./data/SiteData.RData")
-load("./Calibration/Result/HDCM_1_23_3.RData")
-
+rm(list=ls())
+source("./LoadPackages/RDependPackages.R")
+data("SiteData", package = "HDCM")
+load("./Full_Data_Model/all_HDCM_1_23_3.RData")
+  
+  
+  
 CityId <- unique(Site[, 1:2])
 CityId$Id <- 1:nrow(CityId)
 ######################################################################################
@@ -14,8 +15,8 @@ Id <- CityId$Id
 #                             HDCM
 ######################################################################################
 # in winter
-REAL_PM25 <- as.data.frame(wHDCM$Yts)
-REAL_PM25$DATE_TIME <- as.Date(rownames(wHDCM$Yts))
+REAL_PM25 <- as.data.frame(wHDCM[["true.Yts"]])
+REAL_PM25$DATE_TIME <- as.Date(rownames(wHDCM[["true.Yts"]]))
 REAL_PM25 <- gather(
             data = REAL_PM25,      #待转换的数据集名称
             key = "ID",       #转换后的分类字段名称（维度）
@@ -26,8 +27,8 @@ REAL_PM25 <- gather(
 REAL_PM25$ID <- as.numeric(REAL_PM25$ID)
 
 
-Fit.L25 <- as.data.frame(wHDCM$Yts.Pred[1,,])
-Fit.L25$DATE_TIME <- as.Date(rownames(wHDCM$Yts.Pred[1,,]))
+Fit.L25 <- as.data.frame(wHDCM[["Fitted.Yts"]][1,,])
+Fit.L25$DATE_TIME <- as.Date(rownames(wHDCM[["Fitted.Yts"]][1,,]))
 Fit.L25 <- gather(
   data = Fit.L25,      #待转换的数据集名称
   key = "ID",       #转换后的分类字段名称（维度）
@@ -36,8 +37,8 @@ Fit.L25 <- gather(
 )
 
 
-Fit.Median <- as.data.frame(wHDCM$Yts.Pred[2,,])
-Fit.Median$DATE_TIME <- as.Date(rownames(wHDCM$Yts.Pred[2,,]))
+Fit.Median <- as.data.frame(wHDCM[["Fitted.Yts"]][2,,])
+Fit.Median$DATE_TIME <- as.Date(rownames(wHDCM[["Fitted.Yts"]][2,,]))
 Fit.Median <- gather(
                 data = Fit.Median,      #待转换的数据集名称
                 key = "ID",       #转换后的分类字段名称（维度）
@@ -45,8 +46,8 @@ Fit.Median <- gather(
                 -DATE_TIME
               )
 
-Fit.U95 <- as.data.frame(wHDCM$Yts.Pred[3,,])
-Fit.U95$DATE_TIME <- as.Date(rownames(wHDCM$Yts.Pred[3,,]))
+Fit.U95 <- as.data.frame(wHDCM[["Fitted.Yts"]][3,,])
+Fit.U95$DATE_TIME <- as.Date(rownames(wHDCM[["Fitted.Yts"]][3,,]))
 Fit.U95 <- gather(
                   data = Fit.U95,      #待转换的数据集名称
                   key = "ID",       #转换后的分类字段名称（维度）

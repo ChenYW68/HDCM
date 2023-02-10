@@ -1,7 +1,6 @@
 rm(list=ls())
-source("./R/PSTVB_Packages.R")
-load("./data/SiteData.RData")
-# library(gstat)
+source("./LoadPackages/RDependPackages.R")
+data("SiteData", package = "HDCM")
 maxtime <- 7
 maxdist <- 5e6
 
@@ -80,10 +79,8 @@ filled.contour(x = surf.w$x, y = surf.w$y, z = surf.w$z,
                })
 dev.off()
 
-# rm(list=ls())
-# source("./R/PSTVB_Packages.R")
-# data("SiteData", package = "ADCM")
-# library(gstat)
+
+# summer
 maxtime <- 7
 maxdist <- 5e6
 

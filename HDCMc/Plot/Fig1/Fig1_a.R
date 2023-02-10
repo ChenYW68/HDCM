@@ -1,6 +1,5 @@
 
-# library(rgdal)
-source("./R/PSTVB_Packages.R")
+source("./LoadPackages/RDependPackages.R")
 load("./data/China_GeoMap.RData")
 china_map <- ggplot() + geom_polygon(
   data = CPM

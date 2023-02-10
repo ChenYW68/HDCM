@@ -1,27 +1,15 @@
-load("./Calibration/Result/Calibrated_Data.RData")
+load("./Calibration/Calibrated_Data.RData")
 setDT(After_Cali_PM25)
 y.max <- ceiling(max(Real_PM25$PM25, After_Cali_PM25$PM25))
 Da <- After_Cali_PM25
 Real_PM25 <- Real_PM25[Method!= 3,]
-# load("./ADCM_Process.RData")
-#
-# colnames(ADCM)
-# colnames(After_Cali_PM25)
-# ADCM <- ADCM[, c(1:3, 5, 6, 7)]
-# setnames(ADCM, "CMAQ_PM25", "PM25")
-# ADCM <- ADCM[Method == 1,]
-# ADCM$Method <- NULL
-# ADCM$Method <- 3
-# ADCM$Method <- as.factor(ADCM$Method)
-# Da <- rbind(After_Cali_PM25, ADCM)
-# Da$Method <- ordered(Da$Method, levels = c(1, 2, 3))
+
+
 Da$Method <- ordered(Da$Method, levels = c(1, 2, 3))
 
 int <- 1e2
 Label <- as_labeller(c(`1` = "Before calibration",
                        `2` = "After calibration"
-                       # `2` = "After calibration (HDCM)"
-                       # , `3` = "After calibration (ADCM)"
                        ))
 range(Real_PM25$PM25)
 range(After_Cali_PM25$PM25)

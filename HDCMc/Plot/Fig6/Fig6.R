@@ -1,11 +1,14 @@
-source("./R/util.R")
-
-  load(paste0("./Result/WH_1_23_3.RData"))
+rm(list=ls())
+source("./LoadPackages/RDependPackages.R")
+data("SiteData", package = "ADCM")
+######################################################################
+######################################################################
+  load(paste0("./Result/HDCMw.RData"))
   cv.HDCM <- CVw_BTH
-  load(paste0("./Result/WH2_2_23_3.RData"))
+  load(paste0("./Result/HDCM2w.RData"))
   cv.HDCM2 <- CVw_BTH
 
-  data("SiteData", package = "ADCM")
+ 
   setDF(obs_PM25_2015w)
   setDF(Site)
   colnames(obs_PM25_2015w)

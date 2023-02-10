@@ -1,6 +1,6 @@
 rm(list=ls())
-source("./R/PSTVB_Packages.R")
-load("./data/SiteData.RData")
+source("./LoadPackages/RDependPackages.R")
+data("SiteData", package = "HDCM")
 #########################################################################
 
 setDT(obs_PM25_2015w)
