@@ -35,6 +35,31 @@ Quality (CMAQ, Byun and Schere, (2006)) system for China's Beijing-Tianjin-Hebei
 </figure>
 
 
+## Codes
+There are two parts to our codes: 
+1. The VB-spENKS algorithm was written into the [HDCM](https://github.com/ChenYW68/HDCM/tree/main/HDCMc/LoadPackages) package in the R statistical environment;
+2. A project entitled ``[HDCMc.Rproj](https://github.com/ChenYW68/HDCM/tree/main/HDCMc)'' in the [RStudio](https://www.rstudio.com/products/rstudio/download/) environment was built to reproduce all the results (e.g., figures and tables) in this work. 
+
+```
+# Require core package
+1. R >= 4.2.1
+2. Rcpp >= 1.0.7
+3. mgcv >= 1.8-41
+```
+## Installing and loading dependent packages
+-	Open the project file, ``[HDCMc.Rproj](https://github.com/ChenYW68/HDCM/tree/main/HDCMc/LoadPackages)'', based on the [RStudio](https://www.rstudio.com/products/rstudio/download/) tool.
+
+-	Install all the dependent packages via the following command:
+```
+source("./LoadPackages/RDependPackages.R")
+```
+Moreover, the [HDCM](https://github.com/ChenYW68/HDCM/tree/main/HDCMc/LoadPackages) package can be installed by running:
+```
+ install.packages("./LoadPackages/HDCM_1.0.zip", repos = NULL, type = "win.binary")
+```
+
+## An example for the proposed HDCM
+```
 # install.packages("./LoadPackages//HDCM_0.1.0.zip", 
 #                  repos = NULL,
 #                  type = "win.binary")
@@ -197,3 +222,4 @@ CVw_BTH <- HDCM(Tab = paste0(hdcm.table, tab),
                 itMax = 2e2,
                 Obj.Seq = Obj.Seq)
 # save(CVw_BTH, file = paste0("./CV/Result/", hdcm.table, tab, "_", Obj.Seq[1], ".RData"))
+```
