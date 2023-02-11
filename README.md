@@ -190,7 +190,7 @@ tab <- paste0("L", R^2, "_", tab.1, "_", tab.2, "_", n.train, "_", m)
                                    #  case = "toupper")),
 Oracle.infor <- NULL                                  
 start.time <- Sys.time()
-CV_T_Dist_W <- HDCM(Tab = tab,
+CV_Ranalysis <- HDCM(Tab = tab,
                     Site = Site,
                     HDCM.Data = HDCM.Data,
                     H.basic.data = H.basic.data,
