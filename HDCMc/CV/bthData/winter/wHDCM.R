@@ -1,7 +1,6 @@
-# install.packages("./LoadPackages//HDCM_0.1.0.zip", 
+# install.packages("./LoadPackages//HDCM_1.0.zip",
 #                  repos = NULL,
 #                  type = "win.binary")
-
 rm(list=ls())
 source("./LoadPackages/RDependPackages.R")
 data("SiteData", package = "HDCM")
@@ -132,6 +131,15 @@ tab <- paste0(n.grps, "_", tab.1, "_", tab.2)
 assign("Ch", Ch, envir = .GlobalEnv)
 hdcm.table <- "HDCMw_"
 Obj.Seq <- 1:13
+
+
+#--Oracle
+# Oracle.infor <- list(DSN = RODBC::odbcConnect("DSN_01",
+#  uid = "myname",
+#  pwd = "mypwd",
+#  believeNRows = FALSE,
+#  case = "toupper")),
+Oracle.infor <- NULL  
 CVw_BTH <- HDCM(Tab = paste0(hdcm.table, tab),
                 Site = Site,
                 HDCM.Data = HDCM.Data,
@@ -143,11 +151,7 @@ CVw_BTH <- HDCM(Tab = paste0(hdcm.table, tab),
                 verbose = TRUE,
                 Object = "CITY",
                 transf.Response = c("SQRT"),
-                Database = list(DSN = RODBC::odbcConnect("DSN_01",
-                                                         uid = "myname",
-                                                         pwd = "mypwd",
-                                                         believeNRows = FALSE,
-                                                         case = "toupper")),
+                Database = Oracle.infor,
                 response.scale = FALSE,
                 save.Predict = TRUE,
                 ensemble.size = Ne,

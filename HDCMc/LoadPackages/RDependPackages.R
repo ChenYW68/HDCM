@@ -1,15 +1,4 @@
 # # 1 loading packages ---------------------------------------
-# packages <- c("RandomFields","data.table", "spdep", "ggplot2"
-#               ,"plyr","parallel","sqldf","gpuR", "randomForest"
-#               ,"reticulate","spBayes", "latex2exp", "gstat"
-#               , "lubridate", "dplyr","INLA", "stBase"
-#               , "Hmisc", "MASS", "inlabru", "tidyr"
-#               , "progress", "RODBC", "fields", "rgdal"
-#               , "cowplot", "invgamma","DEoptim", "geoR"
-#               , "MBA", "scoringRules", "Rcpp", "writexl"
-#               , "SpecsVerification", "STRbook", "ggmap"
-#               , "verification", "mapproj", "sp", "mvnfast"
-#               , "rgdal") 
 packages <- c("RandomFields",
               "data.table",
               "ggplot2",
@@ -43,6 +32,7 @@ packages <- c("RandomFields",
               "scoringRules",
               "Rcpp", 
               "writexl", 
+              "inlabru",
               "SpecsVerification", 
               "ggmap",
               "ranger", 
@@ -53,7 +43,8 @@ packages <- c("RandomFields",
               "rgdal", 
               "scoringutils", 
               "spTDyn",
-              "HDCM"
+              "HDCM",
+              "rARPACK"
               ) 
 # ,'MASS'
 # 2  library

@@ -191,7 +191,7 @@ CV_Reanalysis <- HDCM(Tab = tab,
                     H.basic.data = H.basic.data,
                     prior = prior,
                     ini.para = para,
-                    CV = TRUE,
+                    CV = F,
                     verbose.VB = TRUE,
                     verbose = TRUE,
                     Object = "Flag",
@@ -201,7 +201,7 @@ CV_Reanalysis <- HDCM(Tab = tab,
                                      pwd = "mypwd",
                                      believeNRows = FALSE,
                                      case = "toupper")),
-                    save.Predict = TRUE,
+                    save.Predict = F,
                     ensemble.size = Ne,
                     n.cores = 1,
                     cs = Cs,
@@ -211,3 +211,5 @@ CV_Reanalysis <- HDCM(Tab = tab,
                     itMax = 5e1)
 end.time <- Sys.time()
 print(end.time - start.time)
+
+save(CV_Reanalysis, file = "./CV_Reanalysis.RData")

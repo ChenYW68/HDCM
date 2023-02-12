@@ -1,74 +1,20 @@
 rm(list=ls())
-source("./R/PSTVB_Packages.R")
-# data("SiteData", package = "AugstBase")
-# data("GeoMap", package = "AugstBase")
-# sourceCpp("./src/mathematics.cpp")
-source("./R/CreateGrid.R")
-# source("./R/CreateHmatrix.R")
-source("./R/Construct_TestTrain_Data.R")
-source("./R/HDCM.R")
-source("./R/VB_EnKS.R")
-source("./R/VB.R")
-source("./R/MEnKS.R")
-source("./R/util.R")
-# load("./data/CMAQ.RData")
-# load("./data/GeoMap.RData")
-data("China_BTH_GeoMap", package = "ADCM")
-data("SiteData", package = "ADCM")
+source("./LoadPackages/RDependPackages.R")
+data("SiteData", package = "HDCM")
+data("China_BTH_GeoMap", package = "HDCM")
 setDF(obs_PM25_2015w);setDF(Site);
-
-INDX <- which(colnames(Site) %in% c("LON_X", "LAT_Y"))
-Site <- ADCM::spCoords.transform(Site[, -INDX], method = 1)
-setDF(obs_PM25_2015w)
-INDX <- which(colnames(obs_PM25_2015w) %in% c("LON_X", "LAT_Y"))
-obs_PM25_2015w <- ADCM::spCoords.transform(obs_PM25_2015w[, -INDX],
-                                           method = 1)
 
 ######################################################################
 #                   1. Create grid
 ######################################################################
-# china.county.map <- rgdal::readOGR(paste0("./DataProcess/Gadm36_CHN_shp/."),"gadm36_CHN_1"
-#                                    , stringsAsFactors=FALSE
-#                                    , encoding = "UTF-8"
-#                                    , use_iconv = T)
-# china.province.map <- china.province.map[china.province.map$NAME_1 == "Hebei" |
-#                                            china.province.map$NAME_1 == "Beijing" |
-#                                            china.province.map$NAME_1 == "Tianjin",]
-
-# china.county.map <- rgdal::readOGR(dsn = path.expand(
-#   paste0("./DataProcess/Gadm36_CHN_shp/."))
-#                             , layer = "gadm36_CHN_2"
-#                             , stringsAsFactors = FALSE
-#                             , encoding = "UTF-8"
-#                             , use_iconv = T)
-#
-# bth_map <- china.county.map[china.county.map$NAME_1 %in%
-#                                        c("Beijing", "Tianjin", "Hebei"
-#                                        ),]
-# save(bth_map, file = "./data/bth_map.RData")
-# Boundary <- as.data.frame(t(bbox(china.county.map)))
-
-
-# par(mfrow = c(1, 2))
-# # plot(Map_BTH$long,Map_BTH$lat, cex = 0.1)
-# plot(a$long,a$lat, cex = .1)
-
-# plot(china.county.map)
-# Map_BTH <- fortify(china.county.map)
-# data("China_BTH_GeoMap", package = "ADCM")
-load("./data/bth_map.RData")
-source("./R/CreateGrid.R")
 Ch <- 0.23
 n.grps <- 2
 H.basic.data <- CreateGrid(obs_PM25_2015w,
                            Site,
-                           Map = bth_map,
-                           max.edge = c(.35, .65), #0.3,0.7
-                           offset = c(1e-1, 0.5), #0.4, 0.6
-                           cutoff = 0.04,#.04, #0.1
-                           # max.edge = c(.35, .65), #0.3,0.7
-                           # offset = c(1e-1, 0.5), #0.4, 0.6
-                           # cutoff = .05,
+                           Map = BTH_City_Map,
+                           max.edge = c(.35, .65), 
+                           offset = c(1e-1, 0.5),
+                           cutoff = 0.04,
                            distance.scale = 1e3,
                            n.grps = n.grps,
                            col = "black",
@@ -80,102 +26,46 @@ H.basic.data <- CreateGrid(obs_PM25_2015w,
                            distance.method = 1,
                            hjust = c(-1, 1, -1, 0.5)) #indicator
 H.basic.data$plot.grid
-# ggsave(plot = H.basic.data$plot.grid, height = 6, width = 6,
-#        file = './figure/Fig_Small_Map.pdf')
-range(H.basic.data$Grid.infor$summary$Hdist)*0.15
-H.basic.data$Grid.infor$summary$Knots.count
-# H.basic.data$Hs <- H.basic.data$Hs/rowSums(H.basic.data$Hs)
-rARPACK::eigs_sym(as.dgCMatrix.spam(H.basic.data$Grid.infor$level[[1]][["Adj.Mat"]]), 1)$values
-# a = H.basic.data$Hs/rowSums(H.basic.data$Hs)
-# b = H.basic.data$Hs[5,]/rowSums(H.basic.data$Hs)[5]
-# all.equal(b, a[5,])
-# points(part.centroids$Var1,part.centroids$Var2, col= "red", pch = 19)
-##########################################################################################
-#                       2. Mapping matrix: H
-##########################################################################################
-# H.basic.data <- CreateHmatrix(grid, method = c("indicator"), #indicator, INLA, Wendland
-#                           site = Site, factor = 1,
-#                           cs = .15,  distance = F,
-#                           distance.method = "geodetic:km" #geodetic:1000km
-# )
-
-# plot.Mat <- function(mat)
-# {
-#   mat %>% as.vector() %>%
-#     tibble(value = ., row = rep(1:nrow(mat), times = ncol(mat)),
-#            col = rep(1: ncol(mat), each = nrow(mat))) %>%
-#     ggplot(aes(x = row, y = col, fill = value)) +
-#     geom_tile(size = 2) +
-#     scale_fill_gradient(low = 'black',high = 'white')+
-#     theme_minimal() +
-#     theme(legend.position = 'none')
-# }
-
-##########################################################################################
-#                          3. Data for modeling
-##########################################################################################
-# YearMonth <- c(201506, 201507, 201508)
-PM25_2015w <- obs_PM25_2015w #%>% filter(YEAR_MONTH %in% YearMonth)
-#
-# CMAQ.cv <- Validation.Group.Region(data = PM25_2015w,
-#                                 # sigma = Pred.sd,
-#                                 col = c("REAL_PM25",
-#                                         "sim_CMAQ_PM25"),
-#                                 by = "CITY")
-# writexl::write_xlsx(CMAQ.cv, path = "./Result/CMAQ.cv.xlsx")
-# #
-# PM25_2015w[, c("sim_CMAQ_PM25", "sim_SPRESS")]=
-#   sqrt(PM25_2015w[, c("sim_CMAQ_PM25", "sim_SPRESS")])
-
-PM25_2015w[, c("sim50_CMAQ_PM25")] <-
-  sqrt(PM25_2015w[, c("sim50_CMAQ_PM25")])
 
 
-DATE_TIME <- unique(PM25_2015w$DATE_TIME) %>% sort()
+
+
+
+
+
+DATE_TIME <- unique(obs_PM25_2015w$DATE_TIME) %>% sort()
 Nt <- length(DATE_TIME)
 date.time <- data.frame(time.index = 1:Nt,
                         time.scale = seq(0, 1, , Nt),
                         time.scale.sin = sin(seq(0, 1, , Nt)/(0.03*pi)),
                         time.scale.cos = cos(seq(0, 1, , Nt)/(0.03*pi)),
                         DATE_TIME = DATE_TIME)
-PM25_2015w <- PM25_2015w  %>% left_join(date.time, by = c("DATE_TIME"))
+PM25_2015w <- obs_PM25_2015w  %>% left_join(date.time, by = c("DATE_TIME"))
+PM25_2015w[, c("sim50_CMAQ_PM25")] <- sqrt(PM25_2015w[, c("sim50_CMAQ_PM25")])
 
-# PM25_2015w$Bias <- sqrt(PM25_2015w$REAL_PM25) - sqrt(obs_PM25_2015w$sim50_CMAQ_PM25)
-# PM25_2015w$CMAQ_PM25  <- sqrt(PM25_2015w$sim50_CMAQ_PM25)
-# construct datasets
 
-source("./R/Construct_HDCM_Data.R")
-ADCM.Data <- Construct_HDCM_Data(data = PM25_2015w,
+HDCM.Data <- Construct_HDCM_Data(data = PM25_2015w,
                                  include = list(YEAR = c(2015, 2016),
                                                 month_day = c("11-01", "1-31")),
-                                 Y = "REAL_PM25",#"Bias",#"REAL_PM25",
+                                 Y = "REAL_PM25",
                                  X = c("sim50_CMAQ_PM25"
                                        , "sim_TEMP"
                                        , "sim_WIND_X"
                                        , "sim_WIND_Y"
-                                       # , "sim_SPRESS"
-                                       # , "time.scale"
-                                       # , "time.index"
-                                       # , "time.scale.sin"
-                                       # , "time.scale.cos"
                                  ),
                                  standard = T,
                                  center = T,
                                  start.index = 1)
-Vari <- var(sqrt(as.vector(ADCM.Data$Y_ts)))
 
-# assign("scaled_variable", ADCM.Data$scaled_variable, envir = .GlobalEnv)
 ##########################################################################################
 #-----------------------------------------------------------------------------------------
 #                         4. Model setting
 ##########################################################################################
 {
   ds <- 0.5*max(H.basic.data$Grid.infor$level[[1]]$Max.Dist)
-  # theta.2 <- c(1e2, 5e1, 0.5*max(H.basic.data$Grid.infor$level[[1]]$BAUs.Dist))
   theta.2 <- c(1e-1, 1e-2, 1)
   res.num <- H.basic.data$Grid.infor$summary$res
-  # ADCM.Data$X_ts <- ADCM.Data$X_ts[-1,,]
-  p1 = dim(ADCM.Data$X_ts)[1]
+  p1 = dim(HDCM.Data$X_ts)[1]
   #---------------------------------------------------------------------
   #                           4.1 Prior
   #---------------------------------------------------------------------
@@ -205,12 +95,6 @@ Vari <- var(sqrt(as.vector(ADCM.Data$Y_ts)))
 ##########################################################################################
 #                          5. Model fitting and prediction
 ##########################################################################################
-library(CovUtil)
-source("./R/HDCM.R")
-source("./R/VB_EnKS.R")
-source("./R/VB.R")
-source("./R/MEnKS.R")
-source("./R/util.R")
 Cs <- 0.3
 Ct <- 1
 Ne <- 100
@@ -222,26 +106,30 @@ tab <- paste0(n.grps, "_", tab.1, "_", tab.2)
 assign("Ch", Ch, envir = .GlobalEnv)
 hdcm.table <- "HDCM2w_"
 Obj.Seq <- 1:13
+
+#--Oracle
+# Oracle.infor <- list(DSN = RODBC::odbcConnect("DSN_01",
+#  uid = "myname",
+#  pwd = "mypwd",
+#  believeNRows = FALSE,
+#  case = "toupper")),
+Oracle.infor <- NULL 
+
+
 CVw_BTH <- HDCM(Tab = paste0(hdcm.table, tab),
                 Site = Site,
-                HDCM.Data = ADCM.Data,
+                HDCM.Data = HDCM.Data,
                 H.basic.data = H.basic.data,
                 prior = prior,
                 ini.para = para,
-                CV = T,
+                CV = TRUE,
                 verbose.VB = TRUE,
                 verbose = TRUE,
                 Object = "CITY",
                 transf.Response = c("SQRT"),
-                Database = list(DSN = RODBC::odbcConnect("DSN_01",
-                                                         uid = "myname",
-                                                         pwd = "mypwd",
-                                                         believeNRows = FALSE,
-                                                         case = "toupper")),
-                response.scale = FALSE,
-                save.Predict = TRUE,
+                Database = Oracle.infor,
+                save.Predict = FALSE,
                 ensemble.size = Ne,
-                # n.cores = 5,
                 factor = 1,
                 cs = Cs,
                 ct = Ct,
