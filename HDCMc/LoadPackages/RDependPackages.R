@@ -1,3 +1,4 @@
+# options(rgdal_show_exportToProj4_warnings="none")
 # # 1 loading packages ---------------------------------------
 packages <- c("RandomFields",
               "data.table",
