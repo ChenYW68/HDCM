@@ -111,7 +111,7 @@ H.basic.data$plot.grid
   <img src="./HDCMc/figure/FigS3_b.jpg" width=50% height=50%>
   </p>
   <figcaption
-  <strong>Figure 2:</strong> Triangulated mesh for the reanalysis dataset with 9 subregions, whose centroids are marked with red dots.
+  <strong>Figure 2:</strong> Triangulated mesh for the reanalysis dataset with 9 subregions, and centroids of the subregions are marked with red dots.
   </figcaption>
 </figure>
 
