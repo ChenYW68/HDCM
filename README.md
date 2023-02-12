@@ -216,7 +216,7 @@ print(end.time - start.time)
 ##  Comparing VB-spEnKS with MCMC-KS
 <figure id="Figure4">
     <p align="center">
-  <img src="./HDCMc/figure/FigS7.jpg" width=80% height=50%>
+  <img src="./HDCMc/figure/FigS7.jpg" width=50% height=50%>
   </p>
   <figcaption
   <strong>Figure 3:</strong> Maps of the random process $w_t(s)$ in the Gneiting space-time covariance model. From top to bottom: simulated $w_t(s)$ map, map of 100 sampling locations, predicted $w_t(s)$ map using MCMC-KS based on the 100 locations, and predicted $w_t(s)$ map using VB-spEnKS based on the 100 locations. The time horizon is from time = 15 to time = 20.
