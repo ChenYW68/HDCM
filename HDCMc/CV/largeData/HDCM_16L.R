@@ -120,7 +120,7 @@ tab <- paste0("L", R^2, "_", tab.1, "_", tab.2, "_", n.train, "_", m)
 #  uid = "myname",
 #  pwd = "mypwd",
 #  believeNRows = FALSE,
-#  case = "toupper")),
+#  case = "toupper"))
 Oracle.infor <- NULL                                  
 start.time <- Sys.time()
 CV_Ranalysis <- HDCM(Tab = tab,

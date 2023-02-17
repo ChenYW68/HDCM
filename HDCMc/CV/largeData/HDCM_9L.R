@@ -120,8 +120,8 @@ tab <- paste0("L", R^2, "_", tab.1, "_", tab.2, "_", n.train, "_", m)
 #  uid = "myname",
 #  pwd = "mypwd",
 #  believeNRows = FALSE,
-#  case = "toupper")),
-Oracle.infor <- NULL                                  
+#  case = "toupper"))
+Oracle.infor <- NULL
 start.time <- Sys.time()
 CV_Ranalysis <- HDCM(Tab = tab,
                      Site = Site,
@@ -135,7 +135,7 @@ CV_Ranalysis <- HDCM(Tab = tab,
                      Object = "Flag",
                      transf.Response = c("SQRT"),
                      Database = Oracle.infor, 
-                     save.Predict = TRUE,
+                     save.Predict = FALSE,
                      ensemble.size = Ne,
                      n.cores = 10,
                      cs = Cs,
