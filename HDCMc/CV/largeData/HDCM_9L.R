@@ -58,26 +58,26 @@ H.basic.data$plot.grid
 sum(H.basic.data$Grid.infor$summary$Knots.count)
 
 
-ds <- max(H.basic.data$Grid.infor$summary$Hdist*0.23)
-G <- H.basic.data$Grid.infor$summary$Hdist
-apply(G<ds, 1, sum)/ncol(G)
+# ds <- max(H.basic.data$Grid.infor$summary$Hdist*0.23)
+# G <- H.basic.data$Grid.infor$summary$Hdist
+# apply(G<ds, 1, sum)/ncol(G)
+# 
+# 
+# # [1] 253.4651 247.3147 244.7844 236.5405 236.5972 242.4445 232.2080 238.5114
+# # [9] 236.6906 215.0532 223.4946 224.0213 225.3215 231.9834 230.0636 206.9150
+# cs <- 0.23
+# spTaper <- list()
+# for(g in 1:H.basic.data$Grid.infor$summary$res)
+# {
+#   spTaper$tuning[g] <- max(H.basic.data$Grid.infor$level[[g]]$BAUs.Dist*
+#                              H.basic.data$Grid.infor$level[[g]]$Max.Dist)*cs
+# }
+# print(spTaper$tuning)
 
 
-# [1] 253.4651 247.3147 244.7844 236.5405 236.5972 242.4445 232.2080 238.5114
-# [9] 236.6906 215.0532 223.4946 224.0213 225.3215 231.9834 230.0636 206.9150
-cs <- 0.23
-spTaper <- list()
-for(g in 1:H.basic.data$Grid.infor$summary$res)
-{
-  spTaper$tuning[g] <- max(H.basic.data$Grid.infor$level[[g]]$BAUs.Dist*
-                             H.basic.data$Grid.infor$level[[g]]$Max.Dist)*cs
-}
-print(spTaper$tuning)
 
-
-
-H.basic.data$Grid.infor$summary$Knots.count
-range(H.basic.data$Grid.infor$summary$Hdist)*0.05
+# H.basic.data$Grid.infor$summary$Knots.count
+# range(H.basic.data$Grid.infor$summary$Hdist)*0.05
 # H.basic.data$Hs <- H.basic.data$Hs/rowSums(H.basic.data$Hs)
 ##########################################################################################
 #                          3. Data for modeling
@@ -123,14 +123,14 @@ HDCM.Data <- Construct_HDCM_Data(data = PM25_2015w,
                                  standard = T,
                                  center = T,
                                  start.index = 1)
-Vari <- var(sqrt(as.vector(HDCM.Data$Y_ts)))
+# Vari <- var(sqrt(as.vector(HDCM.Data$Y_ts)))
 # assign("scaled_variable", HDCM.Data$scaled_variable, envir = .GlobalEnv)
 ##########################################################################################
 #-----------------------------------------------------------------------------------------
 #                         4. Model setting
 ##########################################################################################
 {
-  ds <- 0.5*H.basic.data$Grid.infor$level[[1]]$Max.Dist
+  # ds <- 0.5*H.basic.data$Grid.infor$level[[1]]$Max.Dist
   # theta.2 <- c(1e2, 5e1, 0.5*max(H.basic.data$Grid.infor$level[[1]]$BAUs.Dist))
 
   theta.2 <- c(1e-1, 1E-3, 1E0)
@@ -170,9 +170,9 @@ Vari <- var(sqrt(as.vector(HDCM.Data$Y_ts)))
 # library(profvis)
 # library(CovUtil)
 
-g <- 1
-Cs <- 8e-2
-Cs <- 5e-2
+# g <- 1
+# Cs <- 8e-2
+# Cs <- 5e-2
 
 Ct <- 1
 Ne <- 100
@@ -180,10 +180,17 @@ tab.1 <- strsplit(as.character(Ch), ".", fixed = TRUE)[[1]][2]
 tab.2 <- strsplit(as.character(Cs), ".", fixed = TRUE)[[1]][2]
 m <- sum(H.basic.data$Grid.infor$summary$Knots.count)
 
-
-
-
 tab <- paste0("L", n.grps^2, "_", tab.1, "_", tab.2, "_", n.train, "_", m)
+
+#--Oracle
+# Oracle.infor <- list(DSN = RODBC::odbcConnect("DSN_01",
+#  uid = "myname",
+#  pwd = "mypwd",
+#  believeNRows = FALSE,
+#  case = "toupper")),
+Oracle.infor <- NULL 
+
+
 start.time <- Sys.time()
 CV_Reanalysis <- HDCM(Tab = tab,
                     Site = Site,
@@ -196,11 +203,7 @@ CV_Reanalysis <- HDCM(Tab = tab,
                     verbose = TRUE,
                     Object = "Flag",
                     transf.Response = c("SQRT"),
-                    Database = list(DSN = RODBC::odbcConnect("DSN_01",
-                                     uid = "myname",
-                                     pwd = "mypwd",
-                                     believeNRows = FALSE,
-                                     case = "toupper")),
+                    Database = Oracle.infor,
                     save.Predict = F,
                     ensemble.size = Ne,
                     n.cores = 1,
