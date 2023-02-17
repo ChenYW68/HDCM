@@ -19,7 +19,7 @@ PM25_2015w <- obs_PM25_2015w  %>% left_join(date.time, by = c("DATE_TIME"))
 #--------------------------------------------------------------------------------------
 hdcm.table <- "HDCMw_"
 Ch <- 0.23; R <- 2; Cs <- 0.3; Ct <- 1; Ne <- 100
-Obj.Seq <- 1:13
+Obj.Seq <- 2:13
 #--------------------------------------------------------------------------------------
 # 1. Create a mesh through a triangulation scheme based on the ``INLA`` 
 #    package (Lindgren and Rue, 2015), a spatial partitioning procedure is 
@@ -65,7 +65,7 @@ HDCM.Data <- Construct_HDCM_Data(data = PM25_2015w,
 #                               3. Settings for the HDCM
 #--------------------------------------------------------------------------------------{
 {
-  theta.2 <- c(1e-1, 1e-3, 1)
+  theta.2 <- c(1e-1, 1e-2, 1)
   res.num <- H.basic.data$Grid.infor$summary$res
   p <- dim(HDCM.Data$X_ts)[1]
   #--3.1 Prior
@@ -105,7 +105,7 @@ tab <- paste0(R^2, "_", tab.1, "_", tab.2, "_", m)
 #  uid = "myname",
 #  pwd = "mypwd",
 #  believeNRows = FALSE,
-#  case = "toupper")),
+#  case = "toupper"))
 Oracle.infor <- NULL  
 CVw_BTH <- HDCM(Tab = paste0(hdcm.table, tab),
                 Site = Site,
