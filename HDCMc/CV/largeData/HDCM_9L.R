@@ -135,7 +135,7 @@ Vari <- var(sqrt(as.vector(HDCM.Data$Y_ts)))
 
   theta.2 <- c(1e-1, 1E-3, 1E0)
   res.num <- H.basic.data$Grid.infor$summary$res
-  p1 = dim(HDCM.Data$X_ts)[1]
+  p1 <- dim(HDCM.Data$X_ts)[1]
   #---------------------------------------------------------------------
   #                           4.1 Prior
   #---------------------------------------------------------------------
