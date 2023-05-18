@@ -18,18 +18,10 @@ Quality (CMAQ, Byun and Schere, (2006)) system for China's Beijing-Tianjin-Hebei
   </figcaption>
 </figure> -->
 
-   <!DOCTYPE html>
-
-    <html lang="en" xmlns="./HDCMc/figure/CMAQ.html">
-    <head>
-        <title>Welcome</title>
-    </head>
-    <body>
-        <h1>Django Site</h1>
-        <hr />
-        <p>Thanks for visiting.</p>
-    </body>
-    </html>
+```html
+<!-- sample html code  -->
+<section id="./HDCMc/figure/CMAQ.html"></section>```
+  
 ## An illustration for the reanalysis dataset
 <figure id="Figure1">
     <p align="center">
