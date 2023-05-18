@@ -29,6 +29,8 @@ Quality (CMAQ, Byun and Schere, (2006)) system for China's Beijing-Tianjin-Hebei
   </figcaption>
 </figure>
 
+![](./HDCMc/figure/CMAQ.html)
+
 <figure id="Figure1">
     <p align="center">
   <img src="./HDCMc/figure/CMAQ.html" width=50% height=50%>
