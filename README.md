@@ -29,20 +29,15 @@ Quality (CMAQ, Byun and Schere, (2006)) system for China's Beijing-Tianjin-Hebei
   </figcaption>
 </figure>
 
-```html
-<h2>Example of code</h2>
+<figure id="Figure1">
+    <p align="center">
+  <img src="./HDCMc/figure/CMAQ.html" width=50% height=50%>
+  </p>
+  <figcaption
+  <strong>Figure 1:</strong> 
+  </figcaption>
+</figure>
 
-<pre>
-<div class="container">
-<div class="block two first">
-<h2>Your title</h2>
-<div class="wrap">
-//Your content
-</div>
-</div>
-</div>
-</pre>
-```
 <li class="masthead__menu-item">
           <a href="./HDCMc/figure/CMAQ.html">Research</a>
         </li>
