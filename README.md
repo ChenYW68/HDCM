@@ -213,7 +213,7 @@ CV_Ranalysis <- HDCM(Tab = tab,
 end.time <- Sys.time()
 print(end.time - start.time)
 ```
-##  Comparing VB-spEnKS with MCMC-KS
+##  Simulation study: comparing VB-spEnKS with MCMC-KS
 <figure id="Figure3">
     <p align="center">
   <img src="./HDCMc/figure/FigS3.jpg" width=70% height=50%>
@@ -223,7 +223,7 @@ print(end.time - start.time)
   </figcaption>
 </figure>
 
-## Calibrating Spatiotemporal outputs of the CMAQ model
+## Empirical analysis: calibrating Spatiotemporal outputs of the CMAQ model
 Figure 4 describes the calibration performance of the HDCM for the CMAQ system $PM_{2.5}$ outputs on the entire BTH region from December 17 to December 22, 2015, i.e.,
 <figure id="Figure4">
   <p align="center">
