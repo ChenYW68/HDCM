@@ -224,12 +224,12 @@ print(end.time - start.time)
 </figure>
 
 ## Calibrating Spatiotemporal outputs of the CMAQ model
-Figure 4 describes the calibration performance of the HDCM for the CMAQ system $PM_{2.5}$ outputs on the entire BTH region from December 19 to December 22, 2015, i.e.,
+Figure 4 describes the calibration performance of the HDCM for the CMAQ system $PM_{2.5}$ outputs on the entire BTH region from December 17 to December 22, 2015, i.e.,
 <figure id="Figure4">
   <p align="center">
   <img src="./HDCMc/figure/Fig81.png" width="70%" height="50%">
     </p>
   <figcaption>
-  <strong>Figure 4:</strong> CMAQ numerical model outputs before and after the HDCM calibration from December 19 to December 22, 2015. The solid squares represent the average $PM_{2.5}$ levels at the monitoring stations.
+  <strong>Figure 4:</strong> CMAQ numerical model outputs before and after the HDCM calibration from December 17 to December 22, 2015. The solid squares represent the average $PM_{2.5}$ levels at the monitoring stations.
   </figcaption>
 </figure>
