@@ -3,9 +3,9 @@
 This Github page provides code for reproducing the results in the manuscript:``Efficient and Effective Calibration of Numerical Model Outputs Using Hierarchical Dynamic Model'' by Y. Chen, X. Chang, B. Zhang, and H. Huang. 
 
 ## Datasets
-The effectiveness and efficiency of the ``HDCM`` is demonstrated via two datasets: 
+The effectiveness and efficiency of the ``HDCM``are demonstrated via two datasets: 
 -	 Moderately large datasets: $PM_{2.5}$ concentrations are from the monitoring stations and the outputs of Community Multiscale Air
-Quality (CMAQ, Byun and Schere, (2006)) system for China's Beijing-Tianjin-Hebei (BTH) region, and the sizes are $68 \times 92 = 6{,}256$ spatio-temporal observations and $5{,}587 \times 92 = 514{,}004$ raw spatio-temporal outputs, respectively 
+Quality (CMAQ, see Byun and Schere, (2006)) system for China's Beijing-Tianjin-Hebei (BTH) region, and the sizes are $68 \times 92 = 6{,}256$ spatio-temporal observations and $5{,}587 \times 92 = 514{,}004$ raw spatio-temporal outputs, respectively 
 - Large datasets: $PM_{2.5}$ concentrations are from the reanalysis $PM_{2.5}$ outputs of the Nested Air Quality Prediction Modeling System (NAQPMS, Wang et al., (2006)) and from the raw $PM_{2.5}$ outputs of the CMAQ, and the sizes are $6{,}382 \times 30 = 191{,}460$ reanalysis spatio-temporal outputs and $16{,}093 \times 30 = 482{,}790$ raw spatio-temporal outputs, respectively 
 
 <!-- # An illustration for the first dataset in the BTH region
@@ -24,7 +24,7 @@ Quality (CMAQ, Byun and Schere, (2006)) system for China's Beijing-Tianjin-Hebei
     <p align="center">
   <img src="./HDCMc/figure/FigS2.jpg" width=50% height=50%>
   </p>
-  <figcaption
+  <figcaption>
   <strong>Figure 1:</strong> Maps of grid cells of the CMAQ and the NAQPMS. The symbols ``+'' represent the centroids of 16093 9km CMAQ grids. The symbols ``*'' denote the centroids of 6382 15km NAQPMS grids.
   </figcaption>
 </figure>
@@ -110,7 +110,7 @@ H.basic.data$plot.grid
     <p align="center">
   <img src="./HDCMc/figure/FigS3_b.jpg" width=50% height=50%>
   </p>
-  <figcaption
+  <figcaption>
   <strong>Figure 2:</strong> Triangulated mesh for the reanalysis dataset with 9 subregions, and centroids of the subregions are marked with red dots.
   </figcaption>
 </figure>
@@ -218,7 +218,7 @@ print(end.time - start.time)
     <p align="center">
   <img src="./HDCMc/figure/FigS3.jpg" width=70% height=50%>
   </p>
-  <figcaption
+  <figcaption>
   <strong>Figure 3:</strong> Maps of the random process $w_t(s)$ in the Gneiting space-time covariance model. From top to bottom: simulated $w_t(s)$ map, map of 100 sampling locations, predicted $w_t(s)$ map using MCMC-KS based on the 100 locations, and predicted $w_t(s)$ map using VB-spEnKS based on the 100 locations. The time horizon is from time = 15 to time = 20.
   </figcaption>
 </figure>
