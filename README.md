@@ -223,7 +223,7 @@ print(end.time - start.time)
   </figcaption>
 </figure>
 
-## Empirical analysis: calibrating Spatiotemporal outputs of the CMAQ model
+## Empirical analysis: calibrating spatio-temporal outputs of the CMAQ model
 Figure 4 describes the calibration performance of the HDCM for the CMAQ system $PM_{2.5}$ outputs on the entire BTH region from December 17 to December 22, 2015, i.e.,
 <figure id="Figure4">
   <p align="center">
