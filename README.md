@@ -214,7 +214,7 @@ end.time <- Sys.time()
 print(end.time - start.time)
 ```
 ##  Comparing VB-spEnKS with MCMC-KS
-<figure id="Figure4">
+<figure id="Figure3">
     <p align="center">
   <img src="./HDCMc/figure/FigS3.jpg" width=70% height=50%>
   </p>
