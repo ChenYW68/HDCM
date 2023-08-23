@@ -44,11 +44,12 @@ density_range <- c(0, 0.035)
   label <- c("Before calibration", "After calibration")
 }
 
-
+library(showtext)
+showtext_auto (enable = TRUE)
 {
   p1 <- ggplot(data = da0, aes(x = x, y = density)) +
     # geom_point(aes(shape = method), size = 5) +
-    geom_line(aes(linetype = method, col = method), size = 1.5) +
+    geom_line(aes(linetype = method, col = method), linewidth = 1.5) +
     # scale_shape_manual(name = '', values =  c('*', '+'), labels = label) +
     scale_linetype_manual(name = '', values=  c("dashed", "solid"),
                           labels = label) +
@@ -59,11 +60,16 @@ density_range <- c(0, 0.035)
     scale_x_continuous(limits = c(x_range[1], x_range[2]),
                        breaks = seq(x_range[1], x_range[2],
                                     by = 2e2)) +
-    geom_text(aes(x = -200, y = 0.035
-                  , label =  "(a)"),
-              # family = c("sans"),
-              # fontface = 'bold',
-              color = "black", size = 10) +
+    geom_label(aes(x = -200, y = 0.035
+                  , label =  paste0("(a)")),
+              color = "black",  
+              fill = "transparent", 
+              label.size = 0, size = 10) +
+    # geom_text(aes(x = -200, y = 0.035
+    #               , label =  "(a)"),
+    #           # family = c("sans"),
+    #           # fontface = 'bold',
+    #           color = "black", size = 10) +
     labs(x = TeX("Error (μg/m^3)"), y = "Density") +
     theme(axis.text = element_text(size = 20, colour = "black")
           ,axis.text.x = element_text(hjust = 0.25, size = 20, colour = "black")
@@ -92,11 +98,16 @@ da$method <- ordered(da$method, levels = c("Before calibration",
     
     scale_color_manual(name = '', values =  c("black", "blue"), labels = label)+
     theme_bw() + ylim(x_range[1], x_range[2]) +
-    geom_text(aes(x = 1, y = 200
-                  , label =  "(b)"),
-              # family = c("sans"),
-              # fontface = 'bold',
-              color = "black", size = 10) +
+    geom_label(aes(x = 1, y = 200
+                   , label =  paste0("(b)")),
+               color = "black",  
+               fill = "transparent", 
+               label.size = 0, size = 10) +
+    # geom_text(aes(x = 1, y = 200
+    #               , label =  "(b)"),
+    #           # family = c("sans"),
+    #           # fontface = 'bold',
+    #           color = "black", size = 10) +
     scale_shape_manual(name = '', values =  c("o", "+"), labels = label) +
     labs(x = "Index", y = TeX("Error (μg/m^3)")) +
     theme(axis.text = element_text(size = 20, colour = "black")
