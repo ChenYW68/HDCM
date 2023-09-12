@@ -3,10 +3,11 @@
 This Github page provides code and data for reproducing the results in the manuscript:``Efficient and Effective Calibration of Numerical Model Outputs Using Hierarchical Dynamic Model'' by Y. Chen, X. Chang, B. Zhang, and H. Huang (In Annals of Applied Statistics, Accepted). 
 
 ## Datasets
-The effectiveness and efficiency of the ``HDCM``are demonstrated via two datasets: 
--	 Moderately large datasets: $PM_{2.5}$ concentrations are from the monitoring stations and the outputs of Community Multiscale Air
-Quality (CMAQ, see Byun and Schere, (2006)) system for China's Beijing-Tianjin-Hebei (BTH) region, and the sizes are $68 \times 92 = 6{,}256$ spatio-temporal observations and $5{,}587 \times 92 = 514{,}004$ raw spatio-temporal outputs, respectively 
-- Large datasets: $PM_{2.5}$ concentrations are from the reanalysis $PM_{2.5}$ outputs of the Nested Air Quality Prediction Modeling System (NAQPMS, Wang et al., (2006)) and from the raw $PM_{2.5}$ outputs of the CMAQ, and the sizes are $6{,}382 \times 30 = 191{,}460$ reanalysis spatio-temporal outputs and $16{,}093 \times 30 = 482{,}790$ raw spatio-temporal outputs, respectively 
+The effectiveness and efficiency of the proposed ``HDCM`` are demonstrated using two datasets.
+
+- Moderately large datasets. These consist of PM$_{2.5}$ concentrations obtained from monitoring stations and the outputs of the Community Multiscale Air Quality (CMAQ) system for China's Beijing-Tianjin-Hebei (BTH) region. The dataset sizes are as follows: $68 \times 92 = 6{,}256$ spatio-temporal observations for monitoring stations and $5{,}587 \times 92 = 514{,}004$ raw spatio-temporal outputs for CMAQ, where the number of monitroing stations is 68, the number of CMAQ grid cells is $5{,}587$, and the time length is 92 days.
+
+- Large datasets. These include the reanalysis of PM$_{2.5}$ outputs of the Nested Air Quality Prediction Modeling System (NAQPMS) and the raw PM$_{2.5}$ outputs of the CMAQ system. The dataset sizes are $6,382 \times 30 = 191{,}460$ spatio-temporal gridded outputs for NAQPMS and $16,093 \times 30 = 482,790$ raw gridded outputs for CMAQ, respectively.
 
 <!-- # An illustration for the first dataset in the BTH region
 <figure id="Figure1">
@@ -31,10 +32,10 @@ Quality (CMAQ, see Byun and Schere, (2006)) system for China's Beijing-Tianjin-H
 
 ###
 
-In this paper, we propose a Bayesian hierarchical dynamic model (``HDCM``) and develop an algorithm based on variational Bayes (VB) and ensemble Kalman smoother (EnKS, see Evensen and Van Leeuwen (2000)) to accelerate the parameter estimation and calibration procedure. To further improve the scalability of the HDCM, the Laplace approximation and the space-partitioning-based procedure is embedded in VB and EnKS, respectively. The VB and space-partitioning-based EnKS (spEnKS) have been implemented via our an R package - [HDCM](https://github.com/ChenYW68/HDCM/tree/main/HDCMc/LoadPackages).
+In this paper, we introduce a Bayesian hierarchical dynamic model referred to as 'HDCM' and present an algorithm that combines Variational Bayes (VB) and Ensemble Kalman Smoother (EnKS), as described in Evensen and Van Leeuwen (2000), to expedite the parameter estimation and calibration process. To enhance the scalability of HDCM, we incorporate the Laplace approximation into VB and employ a space-partitioning-based procedure in EnKS. Both VB and the space-partitioning-based EnKS, denoted as 'spEnKS,' have been implemented through our R package - [HDCM](https://github.com/ChenYW68/HDCM/tree/main/HDCMc/LoadPackages).
 
 ## Software packages
-There are two parts for our codes: 
+Our code consists of two parts: 
 1. The VB-spEnKS algorithm was written into the [HDCM](https://github.com/ChenYW68/HDCM/tree/main/HDCMc/LoadPackages) package in the R statistical environment;
 2. A project entitled ``[HDCMc.Rproj](https://github.com/ChenYW68/HDCM/tree/main/HDCMc)'' in the [RStudio](https://www.rstudio.com/products/rstudio/download/) environment was built to reproduce all the results (e.g., figures and tables) in this work. 
 
@@ -42,7 +43,7 @@ There are two parts for our codes:
 - Depends:	R (≥ 4.2.1)
 -	Open the project file, ``[HDCMc.Rproj](https://github.com/ChenYW68/HDCM/tree/main/HDCMc/LoadPackages)'', based on the [RStudio](https://www.rstudio.com/products/rstudio/download/) tool.
 
--	Install all the dependent packages via the following command:
+-	Install all the required packages using the following command:
 ```
 source("./LoadPackages/RDependPackages.R")
 ```
