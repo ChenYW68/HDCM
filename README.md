@@ -20,7 +20,7 @@ The effectiveness and efficiency of the proposed ``HDCM`` are demonstrated using
 </figure> -->
 
   
-## An illustration for the reanalysis dataset
+## Reanalysis datasets of $PM_{2.5}$ concentrations 
 <figure id="Figure1">
     <p align="center">
   <img src="./HDCMc/figure/FigS4.png" width=80% height=80%>
