@@ -12,7 +12,7 @@ The effectiveness and efficiency of the proposed ``HDCM`` are demonstrated using
 <!-- # An illustration for the first dataset in the BTH region
 <figure id="Figure1">
   <p align="center">
-  <img src="./HDCMc/figure/Fig1.jpg" width=50% height=50%>
+  <img src="./HDCMc/figure/Fig1.jpg" width=20% height=20%>
     </p>
   <figcaption
   <strong>Figure 0:</strong> (a) Map of China. (b) Zoomed-in map of the BTH region along with locations of $68$ monitoring stations (red dots) and centroids of $5{,}587$ 9-km CMAQ grids (gray dots).} (c)-(e) Scatter plots of CMAQ $PM_{2.5}$ forecasts versus actual observations at Zhangjiakou, Beijing, and Hengshui in different seasons, where ``Corr'' represents the Pearson correlation coefficient between CMAQ $PM_{2.5}$ outputs and observed $PM_{2.5}$ concentrations. Three reference lines with the slope k = 0.5, 1, and  2 are colored in gray.
