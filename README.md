@@ -1,6 +1,6 @@
 # Efficient and Effective Calibration of Numerical Model Outputs Using Hierarchical Dynamic Models
 
-This Github page provides code and data for reproducing the results in the manuscript:``Efficient and Effective Calibration of Numerical Model Outputs Using Hierarchical Dynamic Model'' by Y. Chen, X. Chang, B. Zhang, and H. Huang (The Annals of Applied Statistics, 2024, 18(2): 1064-1089). 
+This Github page provides code and data for reproducing the results in the manuscript: Y. Chen, X. Chang, B. Zhang, and H. Huang. [Efficient and effective calibration of numerical model outputs using hierarchical dynamic models](https://projecteuclid.org/journals/annals-of-applied-statistics/volume-18/issue-2/Efficient-and-effective-calibration-of-numerical-model-outputs-using-hierarchical/10.1214/23-AOAS1823.full)[J]. The Annals of Applied Statistics, 2024, 18(2): 1064-1089.
 
 ## Datasets
 The effectiveness and efficiency of the proposed ``HDCM`` are demonstrated using two datasets.
