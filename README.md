@@ -5,9 +5,9 @@ This Github page provides code and data for reproducing the results in the manus
 ## Datasets
 The effectiveness and efficiency of the proposed ``HDCM`` are demonstrated using two datasets.
 
-- Moderately large datasets. These consist of $PM_{2.5}$ concentrations obtained from monitoring stations and the outputs of the Community Multiscale Air Quality (CMAQ) system for China's Beijing-Tianjin-Hebei (BTH) region. The dataset sizes are as follows: $68 \times 92 = 6{,}256$ spatio-temporal observations for monitoring stations and $5{,}587 \times 92 = 514{,}004$ raw spatio-temporal outputs for CMAQ, where the number of monitroing stations is 68, the number of CMAQ grid cells is $5{,}587$, and the time length is 92 days.
+- Moderately large datasets. These consist of PM$_{2.5}$ concentrations obtained from monitoring stations and the outputs of the Community Multiscale Air Quality (CMAQ) system for China's Beijing-Tianjin-Hebei (BTH) region. The dataset sizes are as follows: $68 \times 92 = 6{,}256$ spatio-temporal observations for monitoring stations and $5{,}587 \times 92 = 514{,}004$ raw spatio-temporal outputs for CMAQ, where the number of monitroing stations is 68, the number of CMAQ grid cells is $5{,}587$, and the time length is 92 days.
 
-- Large datasets. These include the reanalysis of $PM_{2.5}$ outputs of the Nested Air Quality Prediction Modeling System (NAQPMS) and the raw $PM_{2.5}$ outputs of the CMAQ system. The dataset sizes are $6,382 \times 30 = 191{,}460$ spatio-temporal gridded outputs for NAQPMS and $16,093 \times 30 = 482,790$ raw gridded outputs for CMAQ, respectively.
+- Large datasets. These include the reanalysis of PM$_{2.5}$ outputs of the Nested Air Quality Prediction Modeling System (NAQPMS) and the raw $PM_{2.5}$ outputs of the CMAQ system. The dataset sizes are $6,382 \times 30 = 191{,}460$ spatio-temporal gridded outputs for NAQPMS and $16,093 \times 30 = 482,790$ raw gridded outputs for CMAQ, respectively.
 
 <!-- # An illustration for the first dataset in the BTH region
 <figure id="Figure1">
@@ -20,7 +20,7 @@ The effectiveness and efficiency of the proposed ``HDCM`` are demonstrated using
 </figure> -->
 
   
-## Reanalysis datasets of PM_{2.5} concentrations 
+## Reanalysis datasets of PM$_{2.5}$ concentrations 
 <figure id="Figure1">
     <p align="center">
   <img src="./HDCMc/figure/FigS2.jpg" width=50% height=50%>
