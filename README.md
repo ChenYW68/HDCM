@@ -12,7 +12,7 @@ The effectiveness and efficiency of the proposed ``HDCM`` are demonstrated using
 <!-- # An illustration for the first dataset in the BTH region
 <figure id="Figure1">
   <p align="center">
-  <img src="./HDCMc/figure/Fig1.jpg" width=30% height=30%>
+  <img src="./HDCMc/figure/Fig1.jpg" width="1000px">
     </p>
   <figcaption
   <strong>Figure 0:</strong> (a) Map of China. (b) Zoomed-in map of the BTH region along with locations of $68$ monitoring stations (red dots) and centroids of $5{,}587$ 9-km CMAQ grids (gray dots).} (c)-(e) Scatter plots of CMAQ $PM_{2.5}$ forecasts versus actual observations at Zhangjiakou, Beijing, and Hengshui in different seasons, where ``Corr'' represents the Pearson correlation coefficient between CMAQ $PM_{2.5}$ outputs and observed $PM_{2.5}$ concentrations. Three reference lines with the slope k = 0.5, 1, and  2 are colored in gray.
@@ -23,7 +23,7 @@ The effectiveness and efficiency of the proposed ``HDCM`` are demonstrated using
 ## Reanalysis datasets of $PM_{2.5}$ concentrations 
 <figure id="Figure1">
     <p align="center">
-  <img src="./HDCMc/figure/FigS2.jpg" width=50% height=50%>
+  <img src="./HDCMc/figure/FigS2.jpg" width="1000px">
   </p>
   <figcaption>
   <strong>Figure 1:</strong> Maps of grid cells of the CMAQ and the NAQPMS. The symbols ``+'' represent the centroids of 16093 9km CMAQ grids. The symbols ``*'' denote the centroids of 6382 15km NAQPMS grids.
@@ -109,7 +109,7 @@ H.basic.data$plot.grid
 ```
 <figure id="Figure2">
     <p align="center">
-  <img src="./HDCMc/figure/FigS4.png" width=50% height=50%>
+  <img src="./HDCMc/figure/FigS4.png" width="1000px">
   </p>
   <figcaption>
   <strong>Figure 2:</strong> Triangulated mesh for the reanalysis dataset with 9 subregions, and centroids of the subregions are marked with red dots.
@@ -217,7 +217,7 @@ print(end.time - start.time)
 ##  Simulation study: comparing VB-spEnKS with MCMC-KS
 <figure id="Figure3">
     <p align="center">
-  <img src="./HDCMc/figure/FigS3.jpg" width=70% height=50%>
+  <img src="./HDCMc/figure/FigS3.jpg" width="1000px">
   </p>
   <figcaption>
   <strong>Figure 3:</strong> Maps of the random process $w_t(s)$ in the Gneiting space-time covariance model. From top to bottom: simulated $w_t(s)$ map, map of 100 sampling locations, predicted $w_t(s)$ map using MCMC-KS based on the 100 locations, and predicted $w_t(s)$ map using VB-spEnKS based on the 100 locations. The time horizon is from time = 1 to time = 6.
@@ -228,7 +228,7 @@ print(end.time - start.time)
 Figure 4 describes the calibration performance of the HDCM for the CMAQ system $PM_{2.5}$ outputs on the entire BTH region from December 17 to December 22, 2015, i.e.,
 <figure id="Figure4">
   <p align="center">
-  <img src="./HDCMc/figure/Fig7.png" width="90%" height="70%">
+  <img src="./HDCMc/figure/Fig7.png" width="1000px">
     </p>
   <figcaption>
   <strong>Figure 4:</strong> CMAQ numerical model outputs before and after the HDCM calibration from December 17 to December 22, 2015. The solid squares represent the average $PM_{2.5}$ levels at the monitoring stations.
