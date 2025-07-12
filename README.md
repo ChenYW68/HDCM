@@ -23,7 +23,7 @@ The effectiveness and efficiency of the proposed ``HDCM`` are demonstrated using
 ## Reanalysis datasets of $PM_{2.5}$ concentrations 
 <figure id="Figure1">
     <p align="center">
-  <img src="./HDCMc/figure/FigS2.jpg" width="1000px">
+  <img src="./HDCMc/figure/FigS2.jpg" width="500px">
   </p>
   <figcaption>
   <strong>Figure 1:</strong> Maps of grid cells of the CMAQ and the NAQPMS. The symbols ``+'' represent the centroids of 16093 9km CMAQ grids. The symbols ``*'' denote the centroids of 6382 15km NAQPMS grids.
@@ -109,7 +109,7 @@ H.basic.data$plot.grid
 ```
 <figure id="Figure2">
     <p align="center">
-  <img src="./HDCMc/figure/FigS4.png" width="1000px">
+  <img src="./HDCMc/figure/FigS4.png" width="500px">
   </p>
   <figcaption>
   <strong>Figure 2:</strong> Triangulated mesh for the reanalysis dataset with 9 subregions, and centroids of the subregions are marked with red dots.
